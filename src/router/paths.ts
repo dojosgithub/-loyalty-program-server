@@ -9,7 +9,7 @@ const Paths = {
     },
      Member: {
         add: "/api/add-member",
-        loyalMemberAdd: "/api/add-loyal-member",
+        loyalMemberAdd: "/api/add-loyal-members",
     },
     
   };
