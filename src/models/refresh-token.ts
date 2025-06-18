@@ -40,11 +40,12 @@ refreshTokenSchema.virtual("isActive").get(function () {
 });
 
 refreshTokenSchema.set("toJSON", {
-  virtuals: true,
+  virtuals: true, // keep virtuals
   versionKey: false,
   transform: function (doc, ret) {
-    delete ret.id;
-    delete ret.user;
+    delete ret.id;        // Remove the virtual 'id'
+    delete ret.password;  // Optional
+    return ret;
   },
 });
 

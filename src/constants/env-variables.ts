@@ -90,4 +90,10 @@ export default {
     Sender: process.env.SMTP_SENDER ?? "",
     SmtpTls: process.env.SMTP_TLS === "yes" ? true : false,
   },
+  Auth0 : {
+    Auth0_Domain : process.env.AUTH0_DOMAIN ?? "",
+    Audience: process.env.AUTH0_AUDIENCE ?? "",
+    Auth0_ClientId: process.env.AUTH0_CLIENT_ID ?? "",
+    Auth0_ClientSecret: process.env.AUTH0_CLIENT_SECRET ?? "",
+  }
 } as const;

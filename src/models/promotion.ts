@@ -51,11 +51,12 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
 
 // Optional: remove sensitive fields when converting to JSON
 promotionSchema.set("toJSON", {
-  virtuals: true,
+  virtuals: true, // keep virtuals
   versionKey: false,
   transform: function (doc, ret) {
-    delete ret._id;
-    delete ret.password;
+    delete ret.id;        // Remove the virtual 'id'
+    delete ret.password;  // Optional
+    return ret;
   },
 });
 

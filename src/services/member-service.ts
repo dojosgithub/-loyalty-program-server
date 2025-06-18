@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { escapeRegExp } from "lodash";
 import HttpStatusCodes from "../constants/https-status-codes";
 import { IMember, IUser, Member, User } from "../models";
 import { RouteError } from "../other/classes";
@@ -31,6 +31,12 @@ interface IMemberViaAPI {
   amount: number;
 }
 
+interface paginationParams {
+  page: number;
+  limit: number;
+  search: string;
+}
+
 export const addMemberViaAPI = async (
   reqBody: IMemberViaAPI
 ): Promise<IMember> => {
@@ -59,5 +65,41 @@ export const addMemberViaAPI = async (
 
     return _member;
   }
+};
+
+
+export const getAllMembers = async (params: paginationParams) => {
+  const { page, limit, search } = params;
+
+  let searchQuery = {};
+  const paginateOptions = {
+    page,
+    limit,
+    sort: { createdAt: -1 },
+  };
+
+  if (!_.isEmpty(search) && !_.isUndefined(search)) {
+    const documentMatchKeys = [
+      "customerName",
+      "phoneNumber",
+    ];
+    const ORqueryArray = documentMatchKeys.map((key) => ({
+      [key]: { $regex: new RegExp(escapeRegExp(search), "gi") },
+    }));
+
+    searchQuery = {
+      ...searchQuery,
+      $and: [
+        {
+          $or: ORqueryArray,
+        },
+      ],
+    };
+  }
+
+  // @ts-ignore
+  const _doc = await Member.paginate(searchQuery, paginateOptions);
+
+  return _doc;
 };
 

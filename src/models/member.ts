@@ -50,11 +50,12 @@ const memberSchema = new Schema<IMember, MemberModel>(
 
 // Optional: remove sensitive fields when converting to JSON
 memberSchema.set("toJSON", {
-  virtuals: true,
+  virtuals: true, // keep virtuals
   versionKey: false,
   transform: function (doc, ret) {
-    delete ret._id;
-    delete ret.password;
+    delete ret.id;        // Remove the virtual 'id'
+    delete ret.password;  // Optional
+    return ret;
   },
 });
 

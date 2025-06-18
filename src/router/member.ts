@@ -9,8 +9,14 @@ const memberRouter: Router = Router({ mergeParams: true });
 //? @api  = /api/add-loyal-member
 //? @desc = Register a new member via API
 memberRouter.post(PathsV1.Member.loyalMemberAdd, asyncHandler(memberController.addMemberViaApi));
+
 //? @api  = /api/add-member
 //? @desc = Register a new member
 memberRouter.post(PathsV1.Member.add,asyncHandler(AuthenticateMW), asyncHandler(memberController.addMember));
+
+//? @api  = /api/members
+//? @desc = gets list of members
+memberRouter.get(PathsV1.Member.list, asyncHandler(AuthenticateMW), asyncHandler(memberController.getAllMembers));
+
 
 export { memberRouter };

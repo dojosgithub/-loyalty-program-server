@@ -28,6 +28,14 @@ export interface IAddMember {
   };
 }
 
+interface IReqPagination  {
+  query: {
+    limit: string;
+    page: string;
+    search: string;
+  };
+}
+
 // Public api to get user from ordering platform and pos
 export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
   // Signup
@@ -67,4 +75,15 @@ export const addMember = async (req: IAddMember, res: Response) => {
     data: newMember,
     message: Message.successSignup 
   });
+};
+
+export const getAllMembers = async (req: IReqPagination, res: Response) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const search = req.query.search || "";
+
+  // List members in pagination
+  const response = await MemberService.getAllMembers({ page, limit, search });
+
+  return res.status(HttpStatusCodes.OK).json(response);
 };
