@@ -57,7 +57,6 @@ export const addMember = async (req: IAddMember, res: Response) => {
   if (existingMember) {
     return res.status(HttpStatusCodes.BAD_REQUEST).json({
       message: "A member with this phone number already exists.",
-      data: existingMember,
     });
   }
   const newMember = new Member({
