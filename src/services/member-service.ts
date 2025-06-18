@@ -76,7 +76,7 @@ export const getAllMembers = async (params: paginationParams) => {
     page,
     limit,
     sort: { createdAt: -1 },
-    select: "-lifetimePoints -totalVisits",
+    // select: "-lifetimePoints -totalVisits",
   };
 
   if (!_.isEmpty(search) && !_.isUndefined(search)) {
