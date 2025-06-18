@@ -1,4 +1,10 @@
-**/node_modules
+# Node
+node_modules/
 dist/
-**/**/*.log
+
+# Logs
+*.log
+
+# Env files
+.env
 **/.env
