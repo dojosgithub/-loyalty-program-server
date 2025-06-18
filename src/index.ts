@@ -31,6 +31,24 @@ app.use(
   })
 );
 
+// Will be used in production to restrict origins
+// const allowedOrigins = ["https://yourapp.com", "https://admin.yourapp.com"];
+
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+//     optionsSuccessStatus: 200,
+//   })
+// );
+
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
