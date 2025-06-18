@@ -14,16 +14,22 @@ const Message = {
   NotFound: "User not found",
 } as const;
 
-export interface ISignupReq {
+export interface IAddMemberViaApi {
   body: {
     customerName: string;
     phoneNumber: string;
     amount: number;
   };
 }
+export interface IAddMember {
+  body: {
+    customerName: string;
+    phoneNumber: string;
+  };
+}
 
 // Public api to get user from ordering platform and pos
-export const addMemberViaApi = async (req: ISignupReq, res: Response) => {
+export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
   // Signup
   const member = await MemberService.addMemberViaAPI(req.body);
 
@@ -33,7 +39,7 @@ export const addMemberViaApi = async (req: ISignupReq, res: Response) => {
     .json({ data: member, message: Message.successSignup });
 };
 
-export const addMember = async (req: ISignupReq, res: Response) => {
+export const addMember = async (req: IAddMember, res: Response) => {
   const body = req.body;
 
   const existingMember = await Member.findOne({
@@ -48,10 +54,10 @@ export const addMember = async (req: ISignupReq, res: Response) => {
   }
   const newMember = new Member({
     customerName: body.customerName,
-    currentPoints: body.amount,
-    lifetimePoints: body.amount,
-    totalVisits: 1,
-    lastVisit: new Date(),
+    currentPoints: 0,
+    lifetimePoints: 0,
+    totalVisits: 0,
+    lastVisit: null,
     phoneNumber: body.phoneNumber,
   });
 

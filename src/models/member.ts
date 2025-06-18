@@ -8,7 +8,7 @@ export interface IMember {
   customerName: string;
   phoneNumber: string;
   currentPoints: number;
-  lastVisit: NativeDate;
+  lastVisit: NativeDate | null;
   lifetimePoints: number;
   totalVisits: number;
   createdAt: NativeDate;
