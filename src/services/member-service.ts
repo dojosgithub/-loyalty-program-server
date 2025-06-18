@@ -104,3 +104,20 @@ export const getAllMembers = async (params: paginationParams) => {
   return _doc;
 };
 
+export const updateMember = async (
+  memberId: string,
+  payload: Partial<IMember> // Accept only fields that can be updated
+) => {
+ 
+  const updatedMember = await Member.findByIdAndUpdate(
+    memberId,
+    { $set: payload },
+    { new: true } // Return the updated document
+  );
+
+  if (!updatedMember) {
+    throw new Error("Member not found");
+  }
+
+  return updatedMember;
+};

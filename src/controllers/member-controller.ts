@@ -86,3 +86,14 @@ export const getAllMembers = async (req: IReqPagination, res: Response) => {
 
   return res.status(HttpStatusCodes.OK).json(response);
 };
+
+export const updateMember = async (req: Request, res: Response) => {
+  const { id: memberId } = req.params;
+  const payload = req.body 
+
+  const docs = await MemberService.updateMember(
+    memberId, payload);
+
+  return res.status(HttpStatusCodes.OK).json({data:docs, message: Message.success });
+};
+
