@@ -29,7 +29,7 @@ export interface IAddMember {
   };
 }
 
-interface IReqPagination  {
+interface IReqPagination {
   query: {
     limit: string;
     page: string;
@@ -48,7 +48,7 @@ export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
     .json({ data: member, message: Message.successSignup });
 };
 
-// Apis for web app 
+// Apis for web app
 export const addMember = async (req: IAddMember, res: Response) => {
   const body = req.body;
 
@@ -73,8 +73,8 @@ export const addMember = async (req: IAddMember, res: Response) => {
   await newMember.save();
 
   return res.status(HttpStatusCodes.OK).json({
-    data: newMember,
-    message: Message.successSignup 
+    newMember,
+    message: Message.successSignup,
   });
 };
 
@@ -91,12 +91,13 @@ export const getAllMembers = async (req: IReqPagination, res: Response) => {
 
 export const updateMemberPoints = async (req: Request, res: Response) => {
   const { id: memberId } = req.params;
-  const payload = req.body 
+  const payload = req.body;
 
-  const docs = await MemberService.updateMemberPoints(
-    memberId, payload);
+  const docs = await MemberService.updateMemberPoints(memberId, payload);
 
-  return res.status(HttpStatusCodes.OK).json({data:docs, message: Message.success });
+  return res
+    .status(HttpStatusCodes.OK)
+    .json({ data: docs, message: Message.success });
 };
 
 export const exportMemberExcel = async (req: Request, res: Response) => {
@@ -118,8 +119,11 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.setHeader("Content-Disposition", `attachment; filename=Members-${Date.now()}.xlsx`);
-    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Members-${Date.now()}.xlsx`
+    );
+    res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
 
     await workbook.xlsx.write(res);
     res.end();

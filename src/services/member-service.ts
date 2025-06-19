@@ -123,13 +123,20 @@ export const updateMemberPoints = async (
   if (!member) {
     throw new Error("Member not found");
   }
-  if (payload.pointAdjustment && payload.pointAdjustment !== 0 && payload.pointAdjustment > 0) {
+  if (
+    payload.pointAdjustment &&
+    payload.pointAdjustment !== 0 &&
+    payload.pointAdjustment > 0
+  ) {
     const adjustment = payload.pointAdjustment;
-    member.currentPoints = (member.currentPoints || 0) + adjustment;
-    member.lifetimePoints = (member.lifetimePoints || 0) + adjustment;
+    const oldPoints = member.currentPoints || 0;
+    member.currentPoints = adjustment;
+    const lifetimepointsAdjustment = adjustment - oldPoints;
+    member.lifetimePoints =
+      (member.lifetimePoints || 0) + lifetimepointsAdjustment;
     await member.save();
 
     return member;
   }
-return member
+  return member;
 };
