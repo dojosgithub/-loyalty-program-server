@@ -26,4 +26,9 @@ memberRouter.put(
   asyncHandler(memberController.updateMemberPoints)
 );
 
+//? @api  = /api/download-members
+//? @desc = download members list
+memberRouter.get(PathsV1.Member.download, asyncHandler(AuthenticateMW), asyncHandler(memberController.exportMemberExcel));
+
+
 export { memberRouter };

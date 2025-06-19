@@ -4,6 +4,7 @@ import HttpStatusCodes from "../constants/https-status-codes";
 import { AuthService, MemberService } from "../services";
 import sessionUtil from "../util/session-util";
 import axios from "axios";
+import ExcelJS from "exceljs";
 
 // Messages
 const Message = {
@@ -97,3 +98,34 @@ export const updateMemberPoints = async (req: Request, res: Response) => {
   return res.status(HttpStatusCodes.OK).json({data:docs, message: Message.success });
 };
 
+
+export const exportMemberExcel = async (req: Request, res: Response) => {
+  try {
+    const members = await Member.find().lean();
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Members");
+
+    if (members.length > 0) {
+      worksheet.columns = Object.keys(members[0]).map((key) => ({
+        header: key,
+        key: key,
+      }));
+      worksheet.addRows(members);
+    }
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=members-${Date.now()}.xlsx`);
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error("Error exporting Excel:", error);
+    return res
+      .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Failed to export Excel" });
+  }
+};

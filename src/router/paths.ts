@@ -12,6 +12,7 @@ const Paths = {
         loyalMemberAdd: "/api/add-loyal-members",
         list : "/api/members",
         edit : '/api/member/:id',
+        download : '/api/download-members',
     },
     
   };
