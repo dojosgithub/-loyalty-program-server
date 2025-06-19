@@ -28,6 +28,7 @@ app.use(
     //   "Accept",
     //   "Access-Control-Allow-Request-Method",
     // ],
+    exposedHeaders: ['Content-Disposition'],
   })
 );
 

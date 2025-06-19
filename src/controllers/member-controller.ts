@@ -119,6 +119,7 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
     res.setHeader("Content-Disposition", `attachment; filename=Members-${Date.now()}.xlsx`);
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
 
     await workbook.xlsx.write(res);
     res.end();
