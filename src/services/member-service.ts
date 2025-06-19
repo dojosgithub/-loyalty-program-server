@@ -1,6 +1,6 @@
 import _, { escapeRegExp } from "lodash";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { IMember, IUser, Member, User } from "../models";
+import { IUser, Member, User } from "../models";
 import { RouteError } from "../other/classes";
 import passwordUtil from "../util/password-util";
 import { tick } from "../util/misc";
@@ -37,6 +37,20 @@ interface paginationParams {
   search: string;
 }
 
+interface IMember {
+  customerName: string;
+  phoneNumber: string;
+  currentPoints: number;
+  lastVisit: NativeDate | null;
+  lifetimePoints: number;
+  totalVisits: number;
+  pointAdjustment?: number; // Optional field for point adjustment
+}
+
+interface IPointAdjustment {
+  pointAdjustment?: number; // Optional field for point adjustment
+}
+
 export const addMemberViaAPI = async (
   reqBody: IMemberViaAPI
 ): Promise<IMember> => {
@@ -67,7 +81,6 @@ export const addMemberViaAPI = async (
   }
 };
 
-
 export const getAllMembers = async (params: paginationParams) => {
   const { page, limit, search } = params;
 
@@ -80,10 +93,7 @@ export const getAllMembers = async (params: paginationParams) => {
   };
 
   if (!_.isEmpty(search) && !_.isUndefined(search)) {
-    const documentMatchKeys = [
-      "customerName",
-      "phoneNumber",
-    ];
+    const documentMatchKeys = ["customerName", "phoneNumber"];
     const ORqueryArray = documentMatchKeys.map((key) => ({
       [key]: { $regex: new RegExp(escapeRegExp(search), "gi") },
     }));
@@ -104,20 +114,22 @@ export const getAllMembers = async (params: paginationParams) => {
   return _doc;
 };
 
-export const updateMember = async (
+export const updateMemberPoints = async (
   memberId: string,
-  payload: Partial<IMember> // Accept only fields that can be updated
+  payload: Partial<IPointAdjustment> // Accept only fields that can be updated
 ) => {
- 
-  const updatedMember = await Member.findByIdAndUpdate(
-    memberId,
-    { $set: payload },
-    { new: true } // Return the updated document
-  );
+  const member = await Member.findById(memberId);
 
-  if (!updatedMember) {
+  if (!member) {
     throw new Error("Member not found");
   }
+  if (payload.pointAdjustment && payload.pointAdjustment !== 0 && payload.pointAdjustment > 0) {
+    const adjustment = payload.pointAdjustment;
+    member.currentPoints = (member.currentPoints || 0) + adjustment;
+    member.lifetimePoints = (member.lifetimePoints || 0) + adjustment;
+    await member.save();
 
-  return updatedMember;
+    return member;
+  }
+return member
 };

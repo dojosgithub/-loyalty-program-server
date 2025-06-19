@@ -23,7 +23,7 @@ memberRouter.get(PathsV1.Member.list, asyncHandler(AuthenticateMW), asyncHandler
 memberRouter.put(
   PathsV1.Member.edit,
   asyncHandler(AuthenticateMW),
-  asyncHandler(memberController.updateMember)
+  asyncHandler(memberController.updateMemberPoints)
 );
 
 export { memberRouter };
