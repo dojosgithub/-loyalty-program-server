@@ -48,6 +48,7 @@ export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
     .json({ data: member, message: Message.successSignup });
 };
 
+// Apis for web app 
 export const addMember = async (req: IAddMember, res: Response) => {
   const body = req.body;
 
@@ -97,7 +98,6 @@ export const updateMemberPoints = async (req: Request, res: Response) => {
 
   return res.status(HttpStatusCodes.OK).json({data:docs, message: Message.success });
 };
-
 
 export const exportMemberExcel = async (req: Request, res: Response) => {
   try {
