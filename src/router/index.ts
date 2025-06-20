@@ -3,6 +3,7 @@ import { userUsersRouter } from "./user";
 import { authRouter } from "./auth";
 import Paths from "./paths"; 
 import { memberRouter } from "./member";
+import { promotionRouter } from "./promotion";
 
 const router: Router = Router({ mergeParams: true });
 
@@ -16,5 +17,6 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 router.use(Paths.Users.Base, userUsersRouter);
 router.use(authRouter);
 router.use(memberRouter);
+router.use(promotionRouter);
 
 export { router };

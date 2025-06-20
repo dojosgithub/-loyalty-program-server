@@ -9,3 +9,9 @@ export function tick(milliseconds: number): Promise<void> {
   export const getLoginLinkByEnv = () => {
     return process.env.CLOUD === 'DEV_CLOUD' ? process.env.DOMAIN_FRONT_DEV : process.env.DOMAIN_PROD
   }
+
+
+  export const PROMOTION_STATUS = {
+    DRAFT : "draft",
+    SENT: "sent",
+  }

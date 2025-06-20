@@ -1,17 +1,32 @@
 import { Schema, model, Types, Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { USER_ROLE } from "../constants/misc";
+import { IUser } from "./user";
 
 // ----------------------------------------
 
 export interface IPromotion {
   _id: Types.ObjectId;
+  status: string; // e.g., "sent", "draft"
   description: string;
   message: string;
-  validity: string;
-  time: number;
-  audience: Array<string>;
-  createdBy?: string;
+  validity: {
+  startDate: NativeDate;
+  endDate: NativeDate;
+};
+  sendDateTime: NativeDate;
+  audience: string[];
+  createdBy?: Types.ObjectId ; // Reference to User
+  // delivered to how many members
+  deliveredTo?: number;
+  // delivered to how many members via text
+  deliveredViaText?: number;
+  // how many members replyed YES via text
+  claimViaText?: number;
+  // how many members redeemed the promotion via text
+  redemptionViaText?: number;
+  // sum of claimViaText and redemptionViaText
+  visits?: number;
   createdAt: NativeDate;
   updatedAt: NativeDate;
 }
@@ -24,6 +39,9 @@ type PromotionModel = Model<IPromotion, {}>;
 
 const promotionSchema = new Schema<IPromotion, PromotionModel>(
   {
+    status: {
+      type: String,
+    },
     description: {
       type: String,
       required: true,
@@ -35,11 +53,32 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
       startDate: Date,
       endDate: Date,
     },
-    time: {
-      type: Number,
+    sendDateTime: {
+      type: Date,
+      default: Date.now,
     },
     audience: {
       type: [String],
+    },
+    deliveredTo: {
+      type: Number,
+      default: 0,
+    },
+    visits: {
+      type: Number,
+      default: 0,
+    },
+    deliveredViaText: {
+      type: Number,
+      default: 0,
+    },
+     claimViaText: {
+      type: Number,
+      default: 0,
+    },
+     redemptionViaText: {
+      type: Number,
+      default: 0,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -54,8 +93,8 @@ promotionSchema.set("toJSON", {
   virtuals: true, // keep virtuals
   versionKey: false,
   transform: function (doc, ret) {
-    delete ret.id;        // Remove the virtual 'id'
-    delete ret.password;  // Optional
+    delete ret.id; // Remove the virtual 'id'
+    delete ret.password; // Optional
     return ret;
   },
 });

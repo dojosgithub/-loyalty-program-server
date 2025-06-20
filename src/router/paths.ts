@@ -14,6 +14,12 @@ const Paths = {
         edit : '/api/member/:id',
         download : '/api/download-members',
     },
+    Promotion: {
+        add: "/api/add-promotion",
+        list : "/api/promotions",
+        edit : '/api/member/:id',
+        download : '/api/download-members',
+    },
     
   };
 
