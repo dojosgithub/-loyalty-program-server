@@ -22,7 +22,7 @@ export interface IPromotion {
   };
   sendInstant: boolean;
   sendDateTime: NativeDate;
-  audience: IAudienceMember[];
+  audience: IAudienceMember;
   createdBy?: Types.ObjectId; // Reference to User
   // delivered to how many members
   deliveredTo?: number;
@@ -68,19 +68,15 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
       default: Date.now,
     },
     audience: {
-      type: [
-        {
-          _id: {
-            type: Schema.Types.ObjectId,
-          },
-          name: {
-            type: String,
-          },
-          length: {
-            type: Number,
-          },
-        },
-      ],
+      _id: {
+        type: Schema.Types.ObjectId,
+      },
+      name: {
+        type: String,
+      },
+      length: {
+        type: Number,
+      },
     },
     deliveredTo: {
       type: Number,
