@@ -31,4 +31,9 @@ promotionRouter.put(
 promotionRouter.get(PathsV1.Promotion.download, asyncHandler(AuthenticateMW), asyncHandler(memberController.exportMemberExcel));
 
 
+//? @api  = /api/get-audience
+//? @desc = gets all audience
+promotionRouter.get(PathsV1.Promotion.audienceList, asyncHandler(AuthenticateMW), asyncHandler(promotionController.getAllAudience));
+
+
 export { promotionRouter };

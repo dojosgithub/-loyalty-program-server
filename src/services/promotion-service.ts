@@ -6,6 +6,7 @@ import passwordUtil from "../util/password-util";
 import { PROMOTION_STATUS, tick } from "../util/misc";
 import { IPromotion, Promotion } from "../models/promotion";
 
+
 export const Errors = {
   Unauth: "Unauthorized",
   EmailNotFound(email: string) {
@@ -36,10 +37,9 @@ interface IPointAdjustment {
 }
 
 export const addPromotions = async (body: IPromotion) => {
-
   const newPromotion = new Promotion({
     ...body,
-    status : PROMOTION_STATUS.DRAFT,
+    status: PROMOTION_STATUS.DRAFT,
   });
 
   await newPromotion.save();
@@ -57,11 +57,15 @@ export const getAllPromotions = async (params: paginationParams) => {
     // select: "-lifetimePoints -totalVisits",
   };
 
-
   // @ts-ignore
   const _doc = await Promotion.paginate(searchQuery, paginateOptions);
 
   return _doc;
+};
+
+export const getAllAudience = async () => {
+  const members = await Member.find({});
+  return [{ name: "All Members", length: members.length }];
 };
 
 export const updateMemberPoints = async (

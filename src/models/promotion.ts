@@ -5,18 +5,25 @@ import { IUser } from "./user";
 
 // ----------------------------------------
 
+interface IAudienceMember {
+  _id: Types.ObjectId;
+  name: string;
+  length: number;
+}
+
 export interface IPromotion {
   _id: Types.ObjectId;
   status: string; // e.g., "sent", "draft"
   description: string;
   message: string;
   validity: {
-  startDate: NativeDate;
-  endDate: NativeDate;
-};
+    startDate: NativeDate;
+    endDate: NativeDate;
+  };
+  sendInstant: boolean;
   sendDateTime: NativeDate;
-  audience: string[];
-  createdBy?: Types.ObjectId ; // Reference to User
+  audience: IAudienceMember[];
+  createdBy?: Types.ObjectId; // Reference to User
   // delivered to how many members
   deliveredTo?: number;
   // delivered to how many members via text
@@ -49,6 +56,9 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
     message: {
       type: String,
     },
+    sendInstant: {
+      type: Boolean,
+    },
     validity: {
       startDate: Date,
       endDate: Date,
@@ -58,7 +68,19 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
       default: Date.now,
     },
     audience: {
-      type: [String],
+      type: [
+        {
+          _id: {
+            type: Schema.Types.ObjectId,
+          },
+          name: {
+            type: String,
+          },
+          length: {
+            type: Number,
+          },
+        },
+      ],
     },
     deliveredTo: {
       type: Number,
@@ -72,11 +94,11 @@ const promotionSchema = new Schema<IPromotion, PromotionModel>(
       type: Number,
       default: 0,
     },
-     claimViaText: {
+    claimViaText: {
       type: Number,
       default: 0,
     },
-     redemptionViaText: {
+    redemptionViaText: {
       type: Number,
       default: 0,
     },

@@ -17,6 +17,7 @@ const Paths = {
     Promotion: {
         add: "/api/add-promotion",
         list : "/api/promotions",
+        audienceList : "/api/get-audience",
         edit : '/api/member/:id',
         download : '/api/download-members',
     },

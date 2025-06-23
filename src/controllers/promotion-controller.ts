@@ -31,7 +31,7 @@ interface IReqPagination {
   };
 }
 
-// Apis for web app
+
 export const addPromotion = async (req: Request, res: Response) => {
   const body = req.body as IPromotion;
 
@@ -49,6 +49,13 @@ export const getAllPromotions = async (req: IReqPagination, res: Response) => {
 
   // List members in pagination
   const list = await PromotionService.getAllPromotions({ page, limit });
+
+  return res.status(HttpStatusCodes.OK).json(list);
+};
+
+export const getAllAudience  = async (req: Request, res: Response) => {
+  // List members in pagination
+  const list = await PromotionService.getAllAudience();
 
   return res.status(HttpStatusCodes.OK).json(list);
 };
