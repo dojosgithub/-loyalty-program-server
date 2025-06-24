@@ -30,7 +30,7 @@ interface paginationParams {
 
 export const addReward = async (body: IReward) => {
   const newReward = new Reward({
-    body,
+    ...body,
   });
 
   await newReward.save();
@@ -69,4 +69,13 @@ export const updateReward = async (
   }
 
   return reward;
+};
+
+export const deleteReward = async (rewardId: string) => {
+  const reward = await Reward.findByIdAndDelete(rewardId);
+
+  if (!reward) {
+    throw new Error("Reward not found");
+  }
+
 };

@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { IReward } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { RewardService} from "../services";
+import { RewardService } from "../services";
 
 // Messages
 const Message = {
   successSignup: "Reward added successfully.",
   successVerified: "Verified success",
   success: "Success",
+  deleteSuccess: "Reward deleted successfully",
+  updateSuccess: "Reward updated successfully",
   error: "An error occurred",
   NotFound: "User not found",
 } as const;
@@ -48,5 +50,15 @@ export const updateReward = async (req: Request, res: Response) => {
 
   return res
     .status(HttpStatusCodes.OK)
-    .json({ data: docs, message: Message.success });
+    .json({ data: docs, message: Message.updateSuccess });
+};
+
+export const deleteReward = async (req: Request, res: Response) => {
+  const { id: rewardId } = req.params;
+
+  await RewardService.deleteReward(rewardId);
+
+  return res
+    .status(HttpStatusCodes.OK)
+    .json({ message: Message.deleteSuccess });
 };

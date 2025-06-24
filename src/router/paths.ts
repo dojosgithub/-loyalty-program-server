@@ -1,35 +1,34 @@
-
 const Paths = {
-    Users: {
-      Base: "/api/user", 
-    },
-    Auth: {
-        Signup: "/api/signup",
-        login: "/api/login",
-    },
-     Member: {
-        add: "/api/add-member",
-        loyalMemberAdd: "/api/add-loyal-members",
-        list : "/api/members",
-        edit : '/api/member/:id',
-        download : '/api/download-members',
-    },
-    Promotion: {
-        add: "/api/add-promotion",
-        list : "/api/promotions",
-        lastSentPromotion : "/api/last-promotion",
-        audienceList : "/api/get-audience",
-    },
-    Announcement: {
-        add: "/api/add-announcement",
-        list : "/api/announcements",
-    },
-     Reward: {
-        add: "/api/add-reward",
-        list : "/api/rewards",
-         edit : '/api/reward/:id',
-    },
-    
-  };
+  Users: {
+    Base: "/api/user",
+  },
+  Auth: {
+    Signup: "/api/signup",
+    login: "/api/login",
+  },
+  Member: {
+    add: "/api/add-member",
+    loyalMemberAdd: "/api/add-loyal-members",
+    list: "/api/members",
+    edit: "/api/member/:id",
+    download: "/api/download-members",
+  },
+  Promotion: {
+    add: "/api/add-promotion",
+    list: "/api/promotions",
+    lastSentPromotion: "/api/last-promotion",
+    audienceList: "/api/get-audience",
+  },
+  Announcement: {
+    add: "/api/add-announcement",
+    list: "/api/announcements",
+  },
+  Reward: {
+    add: "/api/add-reward",
+    list: "/api/rewards",
+    edit: "/api/reward/:id",
+    delete: "/api/reward/:id",
+  },
+};
 
-  export default Paths;
+export default Paths;

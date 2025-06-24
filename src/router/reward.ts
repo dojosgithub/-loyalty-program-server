@@ -21,4 +21,13 @@ rewardRouter.put(
   asyncHandler(AuthenticateMW),
   asyncHandler(rewardController.updateReward)
 );
+
+//? @api  = /api/reward/:id
+//? @desc = update reward by ID
+rewardRouter.delete(
+  PathsV1.Reward.delete,
+  asyncHandler(AuthenticateMW),
+  asyncHandler(rewardController.deleteReward)
+);
+
 export { rewardRouter };
