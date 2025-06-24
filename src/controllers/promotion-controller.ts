@@ -9,7 +9,7 @@ import { IPromotion } from "../models/promotion";
 
 // Messages
 const Message = {
-  successSignup: "Member added successfully.",
+  successSignup: "Promotion added successfully.",
   successVerified: "Verified success",
   success: "Success",
   error: "An error occurred",

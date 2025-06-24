@@ -9,7 +9,7 @@ import { IAnnouncement } from "../models/announcement";
 
 // Messages
 const Message = {
-  successSignup: "Member added successfully.",
+  successSignup: "Announcement added successfully.",
   successVerified: "Verified success",
   success: "Success",
   error: "An error occurred",
