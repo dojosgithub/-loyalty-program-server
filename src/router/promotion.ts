@@ -23,5 +23,9 @@ promotionRouter.get(PathsV1.Promotion.list, asyncHandler(AuthenticateMW), asyncH
 //? @desc = gets all audience
 promotionRouter.get(PathsV1.Promotion.audienceList, asyncHandler(AuthenticateMW), asyncHandler(promotionController.getAllAudience));
 
+//? @api  = /api/last-promotion
+//? @desc = get last sent promotion
+promotionRouter.get(PathsV1.Promotion.lastSentPromotion, asyncHandler(AuthenticateMW), asyncHandler(promotionController.getLastPromotionSent));
+
 
 export { promotionRouter };

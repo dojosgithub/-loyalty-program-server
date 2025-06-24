@@ -67,3 +67,11 @@ export const getAllAudience = async () => {
   const members = await Member.find({});
   return [{ name: "All Members", length: members.length }];
 };
+
+export const getLastSentPromotion = async () => {
+  const lastPromotion = await Promotion.findOne({})
+    .sort({ sendDateTime: -1 })
+    .select('description validity deliveredTo visits redemptionViaText'); // Only get description and validity
+
+  return lastPromotion;
+};

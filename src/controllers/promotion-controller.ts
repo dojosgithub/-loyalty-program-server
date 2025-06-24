@@ -60,3 +60,10 @@ export const getAllAudience  = async (req: Request, res: Response) => {
   return res.status(HttpStatusCodes.OK).json(list);
 };
 
+export const getLastPromotionSent = async (req: Request, res: Response) => {
+
+  // List members in pagination
+  const lastPromotion = await PromotionService.getLastSentPromotion();
+
+  return res.status(HttpStatusCodes.OK).json(lastPromotion);
+};

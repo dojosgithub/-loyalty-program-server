@@ -15,14 +15,6 @@ const Message = {
   error: "An error occurred",
   NotFound: "User not found",
 } as const;
-
-export interface IAddPromotion {
-  body: {
-    customerName: string;
-    phoneNumber: string;
-  };
-}
-
 interface IReqPagination {
   query: {
     limit: string;
@@ -30,7 +22,6 @@ interface IReqPagination {
     search: string;
   };
 }
-
 
 export const addAnnouncement = async (req: Request, res: Response) => {
   const body = req.body as IAnnouncement;

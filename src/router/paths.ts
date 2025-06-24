@@ -17,6 +17,7 @@ const Paths = {
     Promotion: {
         add: "/api/add-promotion",
         list : "/api/promotions",
+        lastSentPromotion : "/api/last-promotion",
         audienceList : "/api/get-audience",
     },
     Announcement: {
