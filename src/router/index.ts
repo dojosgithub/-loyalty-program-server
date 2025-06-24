@@ -5,6 +5,7 @@ import Paths from "./paths";
 import { memberRouter } from "./member";
 import { promotionRouter } from "./promotion";
 import { announcementRouter } from "./announcement";
+import { rewardRouter } from "./reward";
 
 const router: Router = Router({ mergeParams: true });
 
@@ -20,5 +21,6 @@ router.use(authRouter);
 router.use(memberRouter);
 router.use(promotionRouter);
 router.use(announcementRouter);
+router.use(rewardRouter);
 
 export { router };

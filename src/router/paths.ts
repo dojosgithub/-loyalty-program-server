@@ -24,6 +24,11 @@ const Paths = {
         add: "/api/add-announcement",
         list : "/api/announcements",
     },
+     Reward: {
+        add: "/api/add-reward",
+        list : "/api/rewards",
+         edit : '/api/reward/:id',
+    },
     
   };
 

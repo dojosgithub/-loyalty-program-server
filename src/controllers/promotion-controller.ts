@@ -1,10 +1,6 @@
 import { Request, Response } from "express";
-import { Member, User } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { MemberService, PromotionService } from "../services";
-import sessionUtil from "../util/session-util";
-import axios from "axios";
-import ExcelJS from "exceljs";
+import { PromotionService } from "../services";
 import { IPromotion } from "../models/promotion";
 
 // Messages

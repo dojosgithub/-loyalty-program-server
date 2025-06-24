@@ -1,6 +1,6 @@
 import _, { escapeRegExp } from "lodash";
-import { PROMOTION_STATUS, tick } from "../util/misc";
-import { Announcement, IAnnouncement } from "../models/announcement";
+import { IReward, Reward } from "../models";
+
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -27,17 +27,17 @@ interface paginationParams {
   limit: number;
 }
 
-export const addAnnouncement = async (body: IAnnouncement) => {
-  const newAnnouncement = new Announcement({
-    ...body,
-    status: PROMOTION_STATUS.DRAFT,
+
+export const addReward = async (body: IReward) => {
+  const newReward = new Reward({
+    body,
   });
 
-  await newAnnouncement.save();
-  return newAnnouncement;
+  await newReward.save();
+  return newReward;
 };
 
-export const getAllAnnouncements = async (params: paginationParams) => {
+export const getAllRewards = async (params: paginationParams) => {
   const { page, limit } = params;
 
   let searchQuery = {};
@@ -49,8 +49,24 @@ export const getAllAnnouncements = async (params: paginationParams) => {
   };
 
   // @ts-ignore
-  const _doc = await Announcement.paginate(searchQuery, paginateOptions);
+  const _doc = await Reward.paginate(searchQuery, paginateOptions);
 
   return _doc;
 };
 
+export const updateReward = async (
+  rewardId: string,
+  payload: Partial<IReward>
+) => {
+  const reward = await Reward.findByIdAndUpdate(
+    rewardId,
+    { $set: payload },
+    { new: true } // Return the updated document
+  );
+
+  if (!reward) {
+    throw new Error("Reward not found");
+  }
+
+  return reward;
+};

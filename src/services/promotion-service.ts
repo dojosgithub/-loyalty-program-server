@@ -1,8 +1,5 @@
 import _, { escapeRegExp } from "lodash";
-import HttpStatusCodes from "../constants/https-status-codes";
-import { IUser, Member, User } from "../models";
-import { RouteError } from "../other/classes";
-import passwordUtil from "../util/password-util";
+import { Member } from "../models";
 import { PROMOTION_STATUS, tick } from "../util/misc";
 import { IPromotion, Promotion } from "../models/promotion";
 
@@ -30,10 +27,6 @@ export const Errors = {
 interface paginationParams {
   page: number;
   limit: number;
-}
-
-interface IPointAdjustment {
-  pointAdjustment?: number; // Optional field for point adjustment
 }
 
 export const addPromotions = async (body: IPromotion) => {

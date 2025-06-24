@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { Member, User } from "../models";
+import { Member } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { AuthService, MemberService } from "../services";
-import sessionUtil from "../util/session-util";
-import axios from "axios";
+import {  MemberService } from "../services";
 import ExcelJS from "exceljs";
 
 // Messages
