@@ -21,7 +21,6 @@ export interface IAnnouncement {
   audience: IAudienceMember;
   createdBy?: Types.ObjectId; // Reference to User
   openRate?: number;
-  imageUrl?: string;
   uniqueOpens?: number;
   deliveredTo?: number;
   createdAt: NativeDate;
@@ -49,9 +48,6 @@ const announcementSchema = new Schema<IAnnouncement, announcementSchema>(
     openRate: {
       type: Number,
       default: 0,
-    },
-    imageUrl: {
-      type: String,
     },
     sendInstant: {
       type: Boolean,
