@@ -4,6 +4,7 @@ import { authRouter } from "./auth";
 import Paths from "./paths"; 
 import { memberRouter } from "./member";
 import { promotionRouter } from "./promotion";
+import { announcementRouter } from "./announcement";
 
 const router: Router = Router({ mergeParams: true });
 
@@ -18,5 +19,6 @@ router.use(Paths.Users.Base, userUsersRouter);
 router.use(authRouter);
 router.use(memberRouter);
 router.use(promotionRouter);
+router.use(announcementRouter);
 
 export { router };
