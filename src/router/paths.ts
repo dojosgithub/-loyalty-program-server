@@ -18,8 +18,10 @@ const Paths = {
         add: "/api/add-promotion",
         list : "/api/promotions",
         audienceList : "/api/get-audience",
-        edit : '/api/member/:id',
-        download : '/api/download-members',
+    },
+    Announcement: {
+        add: "/api/add-announcement",
+        list : "/api/announcements",
     },
     
   };

@@ -1,10 +1,9 @@
 import _, { escapeRegExp } from "lodash";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { IUser, Member, User } from "../models";
-import { RouteError } from "../other/classes";
-import passwordUtil from "../util/password-util";
+import { Member } from "../models";
 import { PROMOTION_STATUS, tick } from "../util/misc";
-import { IPromotion, Promotion } from "../models/promotion";
+import {  Promotion } from "../models/promotion";
+import { Announcement, IAnnouncement } from "../models/announcement";
 
 
 export const Errors = {
@@ -32,21 +31,18 @@ interface paginationParams {
   limit: number;
 }
 
-interface IPointAdjustment {
-  pointAdjustment?: number; // Optional field for point adjustment
-}
 
-export const addPromotions = async (body: IPromotion) => {
-  const newPromotion = new Promotion({
+export const addAnnouncement = async (body: IAnnouncement) => {
+  const newAnnouncement = new Announcement({
     ...body,
     status: PROMOTION_STATUS.DRAFT,
   });
 
-  await newPromotion.save();
-  return newPromotion;
+  await newAnnouncement.save();
+  return newAnnouncement;
 };
 
-export const getAllPromotions = async (params: paginationParams) => {
+export const getAllAnnouncements = async (params: paginationParams) => {
   const { page, limit } = params;
 
   let searchQuery = {};
@@ -58,12 +54,8 @@ export const getAllPromotions = async (params: paginationParams) => {
   };
 
   // @ts-ignore
-  const _doc = await Promotion.paginate(searchQuery, paginateOptions);
+  const _doc = await Announcement.paginate(searchQuery, paginateOptions);
 
   return _doc;
 };
 
-export const getAllAudience = async () => {
-  const members = await Member.find({});
-  return [{ name: "All Members", length: members.length }];
-};
