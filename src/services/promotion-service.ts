@@ -3,7 +3,6 @@ import { Member } from "../models";
 import { PROMOTION_STATUS, tick } from "../util/misc";
 import { IPromotion, Promotion } from "../models/promotion";
 
-
 export const Errors = {
   Unauth: "Unauthorized",
   EmailNotFound(email: string) {
@@ -30,9 +29,13 @@ interface paginationParams {
 }
 
 export const addPromotions = async (body: IPromotion) => {
+  const status =
+    body.sendInstant === false
+      ? PROMOTION_STATUS.SCHEDULED
+      : PROMOTION_STATUS.DRAFT;
   const newPromotion = new Promotion({
     ...body,
-    status: PROMOTION_STATUS.DRAFT,
+    status,
   });
 
   await newPromotion.save();
@@ -62,9 +65,8 @@ export const getAllAudience = async () => {
 };
 
 export const getLastSentPromotion = async () => {
-  const lastPromotion = await Promotion.findOne({})
-    .sort({ sendDateTime: -1 })
-    // .select('description validity deliveredTo visits redemptionViaText'); // Only get description and validity
+  const lastPromotion = await Promotion.findOne({}).sort({ sendDateTime: -1 });
+  // .select('description validity deliveredTo visits redemptionViaText'); // Only get description and validity
 
   return lastPromotion;
 };
