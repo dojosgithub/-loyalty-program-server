@@ -31,4 +31,11 @@ memberRouter.put(
 memberRouter.get(PathsV1.Member.download, asyncHandler(AuthenticateMW), asyncHandler(memberController.exportMemberExcel));
 
 
+// PUBLIC ROUTES
+
+//? @api  = /api/get-points
+//? @desc = Get member points by phone number
+memberRouter.post(PathsV1.Member.getPoints, asyncHandler(memberController.getMemberByPhoneNumber));
+
+
 export { memberRouter };

@@ -62,3 +62,14 @@ export const deleteReward = async (req: Request, res: Response) => {
     .status(HttpStatusCodes.OK)
     .json({ message: Message.deleteSuccess });
 };
+
+
+ // Public API
+ export const getAllRewardsPublicAPI = async (req: IReqPagination, res: Response) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+
+  const list = await RewardService.getAllRewardsPublicAPI({ page, limit });
+
+  return res.status(HttpStatusCodes.OK).json(list);
+};

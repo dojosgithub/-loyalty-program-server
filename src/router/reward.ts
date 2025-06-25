@@ -30,4 +30,12 @@ rewardRouter.delete(
   asyncHandler(rewardController.deleteReward)
 );
 
+
+// Apis for public routes
+
+//? @api  = /api/get-rewards
+//? @desc = gets list of rewards
+rewardRouter.get(PathsV1.Reward.getAllRewards, asyncHandler(rewardController.getAllRewardsPublicAPI));
+
+
 export { rewardRouter };

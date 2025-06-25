@@ -79,3 +79,23 @@ export const deleteReward = async (rewardId: string) => {
   }
 
 };
+
+
+// Public API service
+
+export const getAllRewardsPublicAPI = async (params: paginationParams) => {
+  const { page, limit } = params;
+
+  let searchQuery = {};
+  const paginateOptions = {
+    page,
+    limit,
+    sort: { createdAt: -1 },
+    // select: "-lifetimePoints -totalVisits",
+  };
+
+  // @ts-ignore
+  const _doc = await Reward.paginate(searchQuery, paginateOptions);
+
+  return _doc;
+};

@@ -132,3 +132,22 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
       .json({ message: "Failed to export Excel" });
   }
 };
+
+
+// public API
+
+export const getMemberByPhoneNumber = async (req: Request, res: Response) => {
+  const { phoneNumber } = req.body;
+
+  if (!phoneNumber) {
+    return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: "Phone number is required" });
+  }
+
+  const member = await MemberService.findMemberByPhoneNumber(phoneNumber);
+
+  if (!member) {
+    return res.status(404).json({ message: "Member not found" });
+  }
+
+  return res.status(HttpStatusCodes.OK).json(member);
+};

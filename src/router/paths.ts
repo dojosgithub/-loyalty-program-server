@@ -12,6 +12,7 @@ const Paths = {
     list: "/api/members",
     edit: "/api/member/:id",
     download: "/api/download-members",
+    getPoints: "/api/get-points",
   },
   Promotion: {
     add: "/api/add-promotion",
@@ -28,6 +29,8 @@ const Paths = {
     list: "/api/rewards",
     edit: "/api/reward/:id",
     delete: "/api/reward/:id",
+// public routes
+    getAllRewards: "/api/get-rewards",
   },
 };
 

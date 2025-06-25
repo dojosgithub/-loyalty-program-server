@@ -137,3 +137,10 @@ export const updateMemberPoints = async (
   }
   return member;
 };
+
+
+// public API service 
+
+export const findMemberByPhoneNumber = async (phoneNumber: string) => {
+  return await Member.findOne({ phoneNumber }).select("currentPoints");
+};
