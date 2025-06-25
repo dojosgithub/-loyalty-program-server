@@ -29,10 +29,11 @@ interface paginationParams {
 }
 
 export const addPromotions = async (body: IPromotion) => {
+  console.log("Adding promotion", body);
   const status =
     body.sendInstant === false
       ? PROMOTION_STATUS.SCHEDULED
-      : PROMOTION_STATUS.DRAFT;
+      : PROMOTION_STATUS.SENT;
   const newPromotion = new Promotion({
     ...body,
     status,

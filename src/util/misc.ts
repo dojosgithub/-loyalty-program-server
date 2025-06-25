@@ -12,8 +12,8 @@ export function tick(milliseconds: number): Promise<void> {
 
 
   export const PROMOTION_STATUS = {
-    DRAFT : "draft",
-    SENT: "sent",
-    SCHEDULED : "scheduled",
-    FAILED: "failed",
+    DRAFT : "Draft",
+    SENT: "Sent",
+    SCHEDULED : "Scheduled",
+    FAILED: "Failed",
   }
