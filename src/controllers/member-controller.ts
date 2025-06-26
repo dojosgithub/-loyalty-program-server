@@ -28,6 +28,10 @@ export interface IAddMember {
   };
 }
 
+export interface IMemberUpdate {
+  customerName: string;
+  phoneNumber: string;
+}
 interface IReqPagination {
   query: {
     limit: string;
@@ -136,7 +140,7 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
 
 export const updateMember = async (req: Request, res: Response) => {
   const { id: memberId } = req.params;
-  const payload = req.body;
+  const payload = req.body as Partial<IMemberUpdate>;
 
   const phone = payload.phoneNumber;
   const member = await Member.findById(memberId);
