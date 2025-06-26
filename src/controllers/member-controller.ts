@@ -149,11 +149,13 @@ export const updateMember = async (req: Request, res: Response) => {
       .status(HttpStatusCodes.NOT_FOUND)
       .json({ message: Message.NotFound });
   }
-  const phoneExists = await Member.findOne({ phoneNumber: phone });
-  if (phoneExists) {
-    return res
-      .status(HttpStatusCodes.BAD_REQUEST)
-      .json({ message: Message.alreadyExists });
+  if (phone && phone !== member.phoneNumber) {
+    const phoneExists = await Member.findOne({ phoneNumber: phone });
+    if (phoneExists) {
+      return res
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ message: Message.alreadyExists });
+    }
   }
 
   const updatedMember = await Member.findByIdAndUpdate(
