@@ -6,7 +6,7 @@ import { AuthenticateMW } from "../middleware";
 
 const memberRouter: Router = Router({ mergeParams: true });
 
-//? @api  = /api/add-loyal-member
+//? @api  = /api/add-loyal-members
 //? @desc = Register a new member via API
 memberRouter.post(PathsV1.Member.loyalMemberAdd, asyncHandler(memberController.addMemberViaApi));
 

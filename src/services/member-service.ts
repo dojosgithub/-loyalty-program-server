@@ -1,6 +1,5 @@
 import _, { escapeRegExp } from "lodash";
-import { Member } from "../models";
-
+import { Activity, Member } from "../models";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -52,15 +51,27 @@ export const addMemberViaAPI = async (
   reqBody: IMemberViaAPI
 ): Promise<IMember> => {
   const { customerName, phoneNumber, amount } = reqBody;
+  console.log(typeof(amount), amount);
 
   // Check user exists
   const member = await Member.findOne({ phoneNumber: phoneNumber });
   if (member) {
-    member.currentPoints = member.currentPoints + amount;
+     console.log(typeof(amount), amount);
+    member.currentPoints = (member.currentPoints || 0) + amount;
     member.lifetimePoints = (member.lifetimePoints || 0) + amount;
     member.totalVisits = (member.totalVisits || 0) + 1;
     member.lastVisit = new Date();
     await member.save();
+    const _newActivity = {
+      newUser: false,
+      activityType: "Pt Earned",
+      activityDate: new Date(),
+      activityPoints: amount,
+      revisitCount : member.totalVisits -1,
+      member: member._id,
+    };
+    const _activity = new Activity(_newActivity);
+    await _activity.save();
     return member;
   } else {
     const _newMember = {
@@ -73,6 +84,16 @@ export const addMemberViaAPI = async (
     };
     const _member = new Member(_newMember);
     await _member.save();
+
+    const _newActivity = {
+      newUser: true,
+      activityType: "Pt Earned",
+      activityDate: new Date(),
+      activityPoints: amount,
+      member: _member._id,
+    };
+    const _activity = new Activity(_newActivity);
+    await _activity.save();
 
     return _member;
   }
@@ -138,8 +159,7 @@ export const updateMemberPoints = async (
   return member;
 };
 
-
-// public API service 
+// public API service
 
 export const findMemberByPhoneNumber = async (phoneNumber: string) => {
   return await Member.findOne({ phoneNumber }).select("currentPoints");

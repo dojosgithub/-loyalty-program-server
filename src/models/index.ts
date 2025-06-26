@@ -4,3 +4,4 @@ export * from "./member";
 export * from "./promotion";
 export * from "./announcement";
 export * from "./reward";
+export * from "./activity";
