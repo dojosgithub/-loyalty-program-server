@@ -21,9 +21,15 @@ memberRouter.get(PathsV1.Member.list, asyncHandler(AuthenticateMW), asyncHandler
 //? @api  = /api/member/:id
 //? @desc = update member by ID
 memberRouter.put(
-  PathsV1.Member.edit,
+  PathsV1.Member.pointEdit,
   asyncHandler(AuthenticateMW),
   asyncHandler(memberController.updateMemberPoints)
+);
+
+memberRouter.put(
+  PathsV1.Member.edit,
+  asyncHandler(AuthenticateMW),
+  asyncHandler(memberController.updateMember)
 );
 
 //? @api  = /api/download-members

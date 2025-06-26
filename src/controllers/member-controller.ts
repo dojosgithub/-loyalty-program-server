@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Member } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
-import {  MemberService } from "../services";
+import { MemberService } from "../services";
 import ExcelJS from "exceljs";
 
 // Messages
@@ -11,6 +11,7 @@ const Message = {
   success: "Success",
   error: "An error occurred",
   NotFound: "User not found",
+  alreadyExists: "A member with this phone number already exists.",
 } as const;
 
 export interface IAddMemberViaApi {
@@ -133,6 +134,34 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
   }
 };
 
+export const updateMember = async (req: Request, res: Response) => {
+  const { id: memberId } = req.params;
+  const payload = req.body;
+
+  const phone = payload.phoneNumber;
+  const member = await Member.findById(memberId);
+  if (!member) {
+    return res
+      .status(HttpStatusCodes.NOT_FOUND)
+      .json({ message: Message.NotFound });
+  }
+  const phoneExists = await Member.findOne({ phoneNumber: phone });
+  if (phoneExists) {
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: Message.alreadyExists });
+  }
+
+  const updatedMember = await Member.findByIdAndUpdate(
+    memberId,
+    { $set: payload },
+    { new: true } // Return the updated document
+  );
+
+  return res
+    .status(HttpStatusCodes.OK)
+    .json({ data: updatedMember, message: Message.success });
+};
 
 // public API
 
@@ -140,7 +169,9 @@ export const getMemberByPhoneNumber = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
 
   if (!phoneNumber) {
-    return res.status(HttpStatusCodes.BAD_REQUEST).json({ message: "Phone number is required" });
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: "Phone number is required" });
   }
 
   const member = await MemberService.findMemberByPhoneNumber(phoneNumber);
