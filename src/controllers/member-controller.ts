@@ -9,6 +9,7 @@ const Message = {
   successSignup: "Member added successfully.",
   successVerified: "Verified success",
   success: "Success",
+  successUpdate: "Member updated successfully",
   error: "An error occurred",
   NotFound: "User not found",
   alreadyExists: "A member with this phone number already exists.",
@@ -166,7 +167,7 @@ export const updateMember = async (req: Request, res: Response) => {
 
   return res
     .status(HttpStatusCodes.OK)
-    .json({ data: updatedMember, message: Message.success });
+    .json({ data: updatedMember, message: Message.successUpdate });
 };
 
 // public API
