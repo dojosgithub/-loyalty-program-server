@@ -17,3 +17,14 @@ export function tick(milliseconds: number): Promise<void> {
     SCHEDULED : "Scheduled",
     FAILED: "Failed",
   }
+
+  export const parseDate = (dateStr: string): Date | null => {
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return null;
+
+  const [dd, mm, yyyy] = parts;
+  const isoString = `${yyyy}-${mm}-${dd}T00:00:00.000Z`;
+
+  const date = new Date(isoString);
+  return isNaN(date.getTime()) ? null : date;
+};

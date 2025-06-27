@@ -34,6 +34,9 @@ const Paths = {
 // public routes
     getAllRewards: "/api/get-rewards",
   },
+  Activity: {
+    list: "/api/activity",
+  },
 };
 
 export default Paths;

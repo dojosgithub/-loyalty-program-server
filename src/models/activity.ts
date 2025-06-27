@@ -26,7 +26,7 @@ const activitySchema = new Schema<IActivity, ActivityModel>(
   {
     member: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Member",
     },
     newUser: {
       type: Boolean,

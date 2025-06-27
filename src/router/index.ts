@@ -6,6 +6,7 @@ import { memberRouter } from "./member";
 import { promotionRouter } from "./promotion";
 import { announcementRouter } from "./announcement";
 import { rewardRouter } from "./reward";
+import { activityRouter } from "./activity";
 
 const router: Router = Router({ mergeParams: true });
 
@@ -22,5 +23,6 @@ router.use(memberRouter);
 router.use(promotionRouter);
 router.use(announcementRouter);
 router.use(rewardRouter);
+router.use(activityRouter);
 
 export { router };
