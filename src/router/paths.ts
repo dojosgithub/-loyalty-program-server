@@ -14,6 +14,7 @@ const Paths = {
     edit: "/api/update-member/:id",
     download: "/api/download-members",
     getPoints: "/api/get-points",
+    redeem : "/api/redeem-points",
   },
   Promotion: {
     add: "/api/add-promotion",

@@ -44,4 +44,9 @@ memberRouter.get(PathsV1.Member.download, asyncHandler(AuthenticateMW), asyncHan
 memberRouter.post(PathsV1.Member.getPoints, asyncHandler(memberController.getMemberByPhoneNumber));
 
 
+//? @api  = /api/redeem-points
+//? @desc = redeem-points
+memberRouter.post(PathsV1.Member.redeem, asyncHandler(memberController.redeemMemberPoints));
+
+
 export { memberRouter };

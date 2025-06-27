@@ -40,6 +40,10 @@ interface IReqPagination {
     search: string;
   };
 }
+export interface IRedeemMemberPoints {
+    phoneNumber: string;
+    points : number;
+}
 
 // Public api to get user from ordering platform and pos
 export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
@@ -189,3 +193,19 @@ export const getMemberByPhoneNumber = async (req: Request, res: Response) => {
 
   return res.status(HttpStatusCodes.OK).json(member);
 };
+
+
+export const redeemMemberPoints = async (req: Request, res: Response) => {
+  const { phoneNumber, points } = req.body as IRedeemMemberPoints;
+
+  if (!phoneNumber) {
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: "Phone number is required" });
+  }
+
+  const member = await MemberService.redeemMemberPoints(phoneNumber, points, res);
+
+  return res.status(HttpStatusCodes.OK).json(member);
+};
+

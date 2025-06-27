@@ -6,12 +6,12 @@ import { AuthenticateMW } from "../middleware";
 
 const announcementRouter: Router = Router({ mergeParams: true });
 
-//? @api  = /api/add-loyal-member
-//? @desc = Register a new member via API
+//? @api  = /api/add-announcement
+//? @desc = Register a new announcement 
 announcementRouter.post(PathsV1.Announcement.add, asyncHandler(announcementController.addAnnouncement));
 
-//? @api  = /api/promotions
-//? @desc = gets list of promotions
+//? @api  = /api/announcements
+//? @desc = gets list of announcements
 announcementRouter.get(PathsV1.Announcement.list, asyncHandler(AuthenticateMW), asyncHandler(announcementController.getAllAnnouncements));
 
 export { announcementRouter };

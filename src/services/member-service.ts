@@ -1,5 +1,7 @@
 import _, { escapeRegExp } from "lodash";
 import { Activity, Member } from "../models";
+import HttpStatusCodes from "../constants/https-status-codes";
+import { Response } from "express";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -51,12 +53,12 @@ export const addMemberViaAPI = async (
   reqBody: IMemberViaAPI
 ): Promise<IMember> => {
   const { customerName, phoneNumber, amount } = reqBody;
-  console.log(typeof(amount), amount);
+  console.log(typeof amount, amount);
 
   // Check user exists
   const member = await Member.findOne({ phoneNumber: phoneNumber });
   if (member) {
-     console.log(typeof(amount), amount);
+    console.log(typeof amount, amount);
     member.currentPoints = (member.currentPoints || 0) + amount;
     member.lifetimePoints = (member.lifetimePoints || 0) + amount;
     member.totalVisits = (member.totalVisits || 0) + 1;
@@ -67,7 +69,7 @@ export const addMemberViaAPI = async (
       activityType: "Pt Earned",
       activityDate: new Date(),
       activityPoints: amount,
-      revisitCount : member.totalVisits -1,
+      revisitCount: member.totalVisits - 1,
       member: member._id,
     };
     const _activity = new Activity(_newActivity);
@@ -163,4 +165,38 @@ export const updateMemberPoints = async (
 
 export const findMemberByPhoneNumber = async (phoneNumber: string) => {
   return await Member.findOne({ phoneNumber }).select("currentPoints");
+};
+
+export const redeemMemberPoints = async (
+  phoneNumber: string,
+  points: number,
+  res: Response
+) => {
+  const member = await Member.findOne({ phoneNumber });
+  if (!member) {
+    res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: "Member not found" });
+  }
+  if (member && member?.currentPoints >= points) {
+    member.currentPoints -= points;
+    member.totalVisits += 1;
+    member.lastVisit = new Date();
+    await member.save();
+    const _newActivity = {
+      newUser: false,
+      activityType: "Pt Redeemed",
+      activityDate: new Date(),
+      activityPoints: points,
+      revisitCount: member.totalVisits - 1,
+      member: member._id,
+    };
+    const _activity = new Activity(_newActivity);
+    await _activity.save();
+    return member;
+  } else {
+    res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: "Insufficient points" });
+  }
 };
