@@ -64,7 +64,7 @@ export const sendToken = async (reqBody: ISignupReq) => {
  * Login a user.
  */
 export const verifyToken = async (phoneNumber: string, tokens: string) => {
-  const phone = phoneNumber.replace(/[^0-9]/g, "");
+  const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
   let totp = await TOTP.findOneAndDelete({ phoneNumber: phone }).lean();
   if (totp) {
