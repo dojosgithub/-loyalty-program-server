@@ -91,7 +91,6 @@ export const getAllRewardsPublicAPI = async (params: paginationParams) => {
     page,
     limit,
     sort: { createdAt: -1 },
-    // select: "-lifetimePoints -totalVisits",
   };
 
   // @ts-ignore

@@ -14,62 +14,40 @@ const Message = {
   NotFound: "User not found",
 } as const;
 
-export interface ISignupReq {
+export interface ISendTotp {
   body: {
-    username: string;
-    email: string;
-    password: string;
-    firstname: string;
-    lastname: string;
-    phone: string;
+    phoneNumber: string;
   };
 }
 
-interface ILoginReq {
+export interface IVerifyTotp {
   body: {
-    email: string;
-    password: string;
+    phoneNumber: string;
+    token: string;
   };
-  ip: string;
 }
 
-export const signup = async (req: ISignupReq, res: Response) => {
+export const sendToken = async (req: ISendTotp, res: Response) => {
   // Signup
-  const user = await AuthService.signup(req.body);
+  const body = req.body 
+  const token = await AuthService.sendToken(body);
 
   // Return
   return res
     .status(HttpStatusCodes.OK)
-    .json({ message: Message.successSignup });
+    .json({token: token, message: Message.successSignup });
 };
 
 /**
  * Login a user.
  */
-export const login = async (req: ILoginReq, res: Response) => {
-  const { email, password } = req.body;
-  const { ip } = req;
-  console.log("IP", ip);
+export const verifyToken = async (req: IVerifyTotp, res: Response) => {
+  const { phoneNumber, token } = req.body;
 
   // Login
-  const user = await AuthService.login(email, password);
-
-  const jwtPayload = {
-    id: user._id,
-    email: user.email,
-    role: user.role,
-  };
-
-  // // Setup Role Cookie
-  // await SessionUtil.addRoleTokenCookie(res, jwtPayload);
-
-  // Create access token & refresh token
-  const tokens = await sessionUtil.generateJWTtokens(jwtPayload, ip);
-
-  // Setup Refresh token Cookie
-  await sessionUtil.addRefreshTokenCookie(res, tokens.refreshToken);
+  const user = await AuthService.verifyToken(phoneNumber, token);
 
   return res
     .status(HttpStatusCodes.OK)
-    .json({ user, token: tokens.accessToken });
+    .json({ user });
 };

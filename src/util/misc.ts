@@ -1,3 +1,5 @@
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
 export function tick(milliseconds: number): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -28,3 +30,42 @@ export function tick(milliseconds: number): Promise<void> {
   const date = new Date(isoString);
   return isNaN(date.getTime()) ? null : date;
 };
+
+interface OTPPayload {
+  secret?: string;
+}
+export const generateOTToken = (payload: OTPPayload): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+        expiresIn: '5m',
+      });
+      resolve(token);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const verifyTOTPToken = (
+  token: string
+): Promise<JwtPayload> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+      if (err) {
+        reject(err);
+      } else if (typeof decoded === 'object' && decoded !== null) {
+        resolve(decoded as JwtPayload);
+      } else {
+        reject(new Error('Invalid token payload'));
+      }
+    });
+  });
+};
+
+ export const ACTIVITY_TYPE = {
+    REDEEM : "Pt Redeemed",
+    EARNED: "Pt Earned",
+    REVISIT : "Revisit",
+    SIGNUP: "New Signup",
+  }

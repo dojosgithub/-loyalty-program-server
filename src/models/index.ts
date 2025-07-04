@@ -5,3 +5,4 @@ export * from "./promotion";
 export * from "./announcement";
 export * from "./reward";
 export * from "./activity";
+export * from "./totp";

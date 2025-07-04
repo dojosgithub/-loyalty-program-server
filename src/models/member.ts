@@ -33,6 +33,7 @@ const memberSchema = new Schema<IMember, MemberModel>(
     },
     currentPoints: {
       type: Number,
+      default: 0,
     },
     lastVisit: {
       type: Date,
@@ -40,9 +41,11 @@ const memberSchema = new Schema<IMember, MemberModel>(
     },
     lifetimePoints: {
       type: Number,
+        default: 0,
     },
     totalVisits: {
       type: Number,
+        default: 0,
     },
   },
   { versionKey: false, timestamps: true }

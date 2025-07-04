@@ -3,8 +3,8 @@ const Paths = {
     Base: "/api/user",
   },
   Auth: {
-    Signup: "/api/signup",
-    login: "/api/login",
+    sendTOTP: "/api/send-totp",
+    verifyTOTP: "/api/verify-totp",
   },
   Member: {
     add: "/api/add-member",

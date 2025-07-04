@@ -6,10 +6,10 @@ import PathsV1 from "./paths";
 
 const authRouter: Router = Router({ mergeParams: true });
 
-//? @api  = /api/signup
+//? @api  = /api/send-totp
 //? @desc = Register a new user
-authRouter.post(PathsV1.Auth.Signup, asyncHandler(authController.signup));
+authRouter.post(PathsV1.Auth.sendTOTP, asyncHandler(authController.sendToken));
 
-authRouter.post(PathsV1.Auth.login, asyncHandler(authController.login));
+authRouter.post(PathsV1.Auth.verifyTOTP, asyncHandler(authController.verifyToken));
 
 export { authRouter };

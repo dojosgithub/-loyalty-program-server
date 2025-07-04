@@ -1,9 +1,15 @@
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import HttpStatusCodes from "../constants/https-status-codes";
-import { IUser, User } from "../models";
+import { Activity, IUser, Member, TOTP, User } from "../models";
 import { RouteError } from "../other/classes";
 import passwordUtil from "../util/password-util";
-import { tick } from "../util/misc";
+import {
+  ACTIVITY_TYPE,
+  generateOTToken,
+  tick,
+  verifyTOTPToken,
+} from "../util/misc";
+import speakeasy from "speakeasy";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -26,78 +32,86 @@ export const Errors = {
 } as const;
 
 interface ISignupReq {
-  username: string;
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  phone: string;
+  phoneNumber: string;
 }
 
-export const signup = async (reqBody: ISignupReq): Promise<IUser> => {
-  const { email, username, password, firstname, lastname, phone } = reqBody;
+export const sendToken = async (reqBody: ISignupReq) => {
+  const { phoneNumber } = reqBody;
+  const phone = phoneNumber.replace(/[^0-9]/g, "");
 
-  // Check user exists
-  const user = await User.findOne({ $or: [{ email }, { username }] });
-  const userExists: boolean = !_.isEmpty(user);
-  if (userExists)
-    throw new RouteError(
-      HttpStatusCodes.BAD_REQUEST,
-      Errors.EmailAlreadyExists(email)
-    );
+  var secret = speakeasy.generateSecret({ length: 20 }).base32;
+  var token = speakeasy.totp({
+    digits: 6,
+    secret: secret,
+    encoding: "base32",
+  });
 
-  // Encrypt password
-  const hashPassword: string = await passwordUtil.getHash(password);
+  const TOTPToken = await generateOTToken({ secret });
 
-  // // Create stripe customer
-  // const customerCreateParams: Stripe.CustomerCreateParams = {
-  //   email,
-  //   name: firstname + " " + lastname,
-  //   address: {
-  //     city,
-  //     postal_code: zip,
-  //   },
-  // };
-  // const { id: stripeCustomer } = await stripe.customers.create(
-  //   customerCreateParams
-  // );
+  // Find if the document with the phoneNumber exists in the database
+  let totp = await TOTP.findOneAndUpdate({ phone }, { token: TOTPToken });
+  if (isEmpty(totp)) {
+    await new TOTP({
+      phoneNumber: phone,
+      token: TOTPToken,
+    }).save();
+  }
 
-  // Create user in db
-  const _newUser = {
-    username,
-    email,
-    password: hashPassword,
-    firstname,
-    lastname,
-    //   stripeCustomer,
-    phone,
-  };
-  const _user = new User(_newUser);
-  await _user.save();
-
-  return _user;
+  return token;
 };
-
 
 /**
  * Login a user.
  */
-export const login = async (email: string, password: string) => {
-    // Fetch user
-    const user = await User.findOne({ email });
-  
-    if (_.isEmpty(user))
-      throw new RouteError(HttpStatusCodes.BAD_REQUEST, Errors.InvalidLogin);
-  
-    // Check password
-    const hash = user.password ?? "",
-      pwdPassed = await passwordUtil.compare(password, hash);
-  
-    if (!pwdPassed) {
-      // If password failed, wait 500ms this will increase security
-      await tick(500);
-      throw new RouteError(HttpStatusCodes.BAD_REQUEST, Errors.InvalidLogin);
+export const verifyToken = async (phoneNumber: string, tokens: string) => {
+  const phone = phoneNumber.replace(/[^0-9]/g, "");
+
+  let totp = await TOTP.findOneAndDelete({ phoneNumber: phone }).lean();
+  if (totp) {
+    let decoded = await verifyTOTPToken(totp.token as string);
+    let verified = speakeasy.totp.verify({
+      digits: 6,
+      secret: decoded.secret,
+      encoding: "base32",
+      token: tokens,
+      window: 10,
+    });
+    // verified in production
+    if (verified) {
+      const member = await Member.findOne({ phoneNumber: phoneNumber });
+      if (member) {
+        member.totalVisits = (member.totalVisits || 0) + 1;
+        member.lastVisit = new Date();
+        await member.save();
+        const _newActivity = {
+          newUser: false,
+          activityType: ACTIVITY_TYPE.REVISIT,
+          activityDate: new Date(),
+          revisitCount: member.totalVisits - 1,
+          member: member._id,
+        };
+        const _activity = new Activity(_newActivity);
+        await _activity.save();
+        return member;
+      } else {
+        const _newMember = {
+          customerName: "TEMP_USER",
+          totalVisits: 1,
+          lastVisit: new Date(),
+          phoneNumber: phone,
+        };
+        const _member = new Member(_newMember);
+        await _member.save();
+        const _newActivity = {
+          newUser: true,
+          activityType: ACTIVITY_TYPE.SIGNUP,
+          activityDate: new Date(),
+          member: _member._id,
+        };
+        const _activity = new Activity(_newActivity);
+        await _activity.save();
+        return _member;
+      }
     }
-  
-    return user;
-  };
+  }
+};
