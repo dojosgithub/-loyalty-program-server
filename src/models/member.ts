@@ -11,6 +11,7 @@ export interface IMember {
   lastVisit: NativeDate | null;
   lifetimePoints: number;
   totalVisits: number;
+  revisitCount: number;
   createdAt: NativeDate;
   updatedAt: NativeDate;
 }
@@ -47,6 +48,10 @@ const memberSchema = new Schema<IMember, MemberModel>(
       type: Number,
         default: 0,
     },
+    revisitCount: {
+      type: Number,
+        default: 0,
+    }
   },
   { versionKey: false, timestamps: true }
 );

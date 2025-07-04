@@ -37,12 +37,12 @@ interface paginationParams {
 }
 
 interface IMember {
-  customerName: string;
-  phoneNumber: string;
-  currentPoints: number;
-  lastVisit: NativeDate | null;
-  lifetimePoints: number;
-  totalVisits: number;
+  customerName?: string;
+  phoneNumber?: string;
+  currentPoints?: number;
+  lastVisit?: NativeDate | null;
+  lifetimePoints?: number;
+  totalVisits?: number;
   pointAdjustment?: number; // Optional field for point adjustment
 }
 
@@ -50,55 +50,33 @@ interface IPointAdjustment {
   pointAdjustment?: number; // Optional field for point adjustment
 }
 
-export const addMemberViaAPI = async (
+export const addMemberPointsViaApi = async (
   reqBody: IMemberViaAPI
-): Promise<IMember> => {
+) => {
   const { customerName, phoneNumber, amount } = reqBody;
+  const phone = phoneNumber.replace(/[^0-9]/g, "");
   console.log(typeof amount, amount);
 
   // Check user exists
-  const member = await Member.findOne({ phoneNumber: phoneNumber });
+  const member = await Member.findOne({ phoneNumber: phone });
   if (member) {
-    console.log(typeof amount, amount);
+    if (member.customerName === "TEMP_USER") {
+      member.customerName = customerName;
+      await member.save();
+    }
     member.currentPoints = (member.currentPoints || 0) + amount;
     member.lifetimePoints = (member.lifetimePoints || 0) + amount;
-    member.totalVisits = (member.totalVisits || 0) + 1;
-    member.lastVisit = new Date();
     await member.save();
     const _newActivity = {
       newUser: false,
       activityType: ACTIVITY_TYPE.EARNED,
       activityDate: new Date(),
       activityPoints: amount,
-      revisitCount: member.totalVisits - 1,
       member: member._id,
     };
     const _activity = new Activity(_newActivity);
     await _activity.save();
     return member;
-  } else {
-    const _newMember = {
-      customerName,
-      currentPoints: amount,
-      lifetimePoints: amount,
-      totalVisits: 1,
-      lastVisit: new Date(),
-      phoneNumber,
-    };
-    const _member = new Member(_newMember);
-    await _member.save();
-
-    const _newActivity = {
-      newUser: true,
-      activityType: ACTIVITY_TYPE.EARNED,
-      activityDate: new Date(),
-      activityPoints: amount,
-      member: _member._id,
-    };
-    const _activity = new Activity(_newActivity);
-    await _activity.save();
-
-    return _member;
   }
 };
 
@@ -182,6 +160,7 @@ export const redeemMemberPoints = async (
   if (member && member?.currentPoints >= points) {
     member.currentPoints -= points;
     member.totalVisits += 1;
+    member.revisitCount = member.totalVisits;
     member.lastVisit = new Date();
     await member.save();
     const _newActivity = {
@@ -189,7 +168,6 @@ export const redeemMemberPoints = async (
       activityType: ACTIVITY_TYPE.REDEEM,
       activityDate: new Date(),
       activityPoints: points,
-      revisitCount: member.totalVisits - 1,
       member: member._id,
     };
     const _activity = new Activity(_newActivity);

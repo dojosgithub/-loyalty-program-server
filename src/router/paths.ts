@@ -8,7 +8,7 @@ const Paths = {
   },
   Member: {
     add: "/api/add-member",
-    loyalMemberAdd: "/api/add-loyal-members",
+    MemberPointAdd: "/api/add-member-points",
     list: "/api/members",
     pointEdit: "/api/member/:id",
     edit: "/api/update-member/:id",

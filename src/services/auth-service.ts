@@ -82,12 +82,12 @@ export const verifyToken = async (phoneNumber: string, tokens: string) => {
       if (member) {
         member.totalVisits = (member.totalVisits || 0) + 1;
         member.lastVisit = new Date();
+        member.revisitCount= member.totalVisits,
         await member.save();
         const _newActivity = {
           newUser: false,
           activityType: ACTIVITY_TYPE.REVISIT,
           activityDate: new Date(),
-          revisitCount: member.totalVisits - 1,
           member: member._id,
         };
         const _activity = new Activity(_newActivity);

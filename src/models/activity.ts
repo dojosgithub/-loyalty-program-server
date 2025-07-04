@@ -8,7 +8,6 @@ export interface IActivity {
   _id: Types.ObjectId;
   member?: Types.ObjectId;
   newUser?: boolean;
-  revisitCount?: number;
   activityType: string; // e.g., "visit", "redemption", "claim"
   activityDate: NativeDate;
   activityPoints?: number; // e.g., "visit", "redemption", "claim"
@@ -30,10 +29,6 @@ const activitySchema = new Schema<IActivity, ActivityModel>(
     },
     newUser: {
       type: Boolean,
-    },
-    revisitCount: {
-      type: Number,
-      default: 0,
     },
     activityType: {
       type: String,

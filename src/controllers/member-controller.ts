@@ -46,9 +46,9 @@ export interface IRedeemMemberPoints {
 }
 
 // Public api to get user from ordering platform and pos
-export const addMemberViaApi = async (req: IAddMemberViaApi, res: Response) => {
+export const addMemberPointsViaApi = async (req: IAddMemberViaApi, res: Response) => {
   // Signup
-  const member = await MemberService.addMemberViaAPI(req.body);
+  const member = await MemberService.addMemberPointsViaApi(req.body);
 
   // Return
   return res
