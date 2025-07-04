@@ -2,6 +2,7 @@ import _, { escapeRegExp } from "lodash";
 import { Activity, Member } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
 import { Response } from "express";
+import { ACTIVITY_TYPE } from "../util/misc";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -66,7 +67,7 @@ export const addMemberViaAPI = async (
     await member.save();
     const _newActivity = {
       newUser: false,
-      activityType: "Pt Earned",
+      activityType: ACTIVITY_TYPE.EARNED,
       activityDate: new Date(),
       activityPoints: amount,
       revisitCount: member.totalVisits - 1,
@@ -89,7 +90,7 @@ export const addMemberViaAPI = async (
 
     const _newActivity = {
       newUser: true,
-      activityType: "Pt Earned",
+      activityType: ACTIVITY_TYPE.EARNED,
       activityDate: new Date(),
       activityPoints: amount,
       member: _member._id,
@@ -185,7 +186,7 @@ export const redeemMemberPoints = async (
     await member.save();
     const _newActivity = {
       newUser: false,
-      activityType: "Pt Redeemed",
+      activityType: ACTIVITY_TYPE.REDEEM,
       activityDate: new Date(),
       activityPoints: points,
       revisitCount: member.totalVisits - 1,
