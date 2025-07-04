@@ -37,7 +37,7 @@ interface ISignupReq {
 
 export const sendToken = async (reqBody: ISignupReq) => {
   const { phoneNumber } = reqBody;
-  const phone = phoneNumber.replace(/[^0-9]/g, "");
+  const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
   var secret = speakeasy.generateSecret({ length: 20 }).base32;
   var token = speakeasy.totp({
