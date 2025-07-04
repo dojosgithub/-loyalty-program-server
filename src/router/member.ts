@@ -16,7 +16,7 @@ memberRouter.post(PathsV1.Member.add,asyncHandler(AuthenticateMW), asyncHandler(
 
 //? @api  = /api/members
 //? @desc = gets list of members
-memberRouter.get(PathsV1.Member.list, asyncHandler(AuthenticateMW), asyncHandler(memberController.getAllMembers));
+memberRouter.get(PathsV1.Member.list, asyncHandler(memberController.getAllMembers));
 
 //? @api  = /api/member/:id
 //? @desc = update member by ID
