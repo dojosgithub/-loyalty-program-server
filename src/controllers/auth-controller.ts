@@ -8,6 +8,7 @@ import axios from "axios";
 // Messages
 const Message = {
   successSignup: "Sign up successful.",
+  otpSentSuccess: "OTP sent successfully.",
   successVerified: "Verified success",
   success: "Success",
   error: "An error occurred",
@@ -35,7 +36,7 @@ export const sendToken = async (req: ISendTotp, res: Response) => {
   // Return
   return res
     .status(HttpStatusCodes.OK)
-    .json({token: token, message: Message.successSignup });
+    .json({token: token, message: Message.otpSentSuccess });
 };
 
 /**
