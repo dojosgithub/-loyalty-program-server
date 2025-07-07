@@ -1,4 +1,5 @@
 import _, { isEmpty } from "lodash";
+import { Request, Response } from "express";
 import HttpStatusCodes from "../constants/https-status-codes";
 import { Activity, IUser, Member, TOTP, User } from "../models";
 import { RouteError } from "../other/classes";
@@ -63,7 +64,7 @@ export const sendToken = async (reqBody: ISignupReq) => {
 /**
  * Login a user.
  */
-export const verifyToken = async (phoneNumber: string, tokens: string) => {
+export const verifyToken = async (phoneNumber: string, tokens: string, res:Response) => {
   const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
   let totp = await TOTP.findOneAndDelete({ phoneNumber: phone }).lean();
@@ -112,6 +113,10 @@ export const verifyToken = async (phoneNumber: string, tokens: string) => {
         await _activity.save();
         return _member;
       }
+    } else{
+       return res
+    .status(HttpStatusCodes.BAD_REQUEST)
+    .json({ message : "OTP not verified" });
     }
   }
 };

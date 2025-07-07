@@ -46,7 +46,7 @@ export const verifyToken = async (req: IVerifyTotp, res: Response) => {
   const { phoneNumber, token } = req.body;
 
   // Login
-  const user = await AuthService.verifyToken(phoneNumber, token);
+  const user = await AuthService.verifyToken(phoneNumber, token, res);
 
   return res
     .status(HttpStatusCodes.OK)
