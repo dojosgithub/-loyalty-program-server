@@ -64,10 +64,19 @@ export const sendToken = async (reqBody: ISignupReq) => {
 /**
  * Login a user.
  */
-export const verifyToken = async (phoneNumber: string, tokens: string, res:Response) => {
+export const verifyToken = async (
+  phoneNumber: string,
+  tokens: string,
+  res: Response
+) => {
   const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
   let totp = await TOTP.findOneAndDelete({ phoneNumber: phone }).lean();
+  if (!totp) {
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST)
+      .json({ message: "No OTP record found or it has already been used." });
+  }
   if (totp) {
     let decoded = await verifyTOTPToken(totp.token as string);
     let verified = speakeasy.totp.verify({
@@ -83,8 +92,7 @@ export const verifyToken = async (phoneNumber: string, tokens: string, res:Respo
       if (member) {
         member.totalVisits = (member.totalVisits || 0) + 1;
         member.lastVisit = new Date();
-        member.revisitCount= member.totalVisits -1,
-        await member.save();
+        (member.revisitCount = member.totalVisits - 1), await member.save();
         const _newActivity = {
           newUser: false,
           activityType: ACTIVITY_TYPE.REVISIT,
@@ -113,10 +121,10 @@ export const verifyToken = async (phoneNumber: string, tokens: string, res:Respo
         await _activity.save();
         return _member;
       }
-    } else{
-       return res
-    .status(HttpStatusCodes.BAD_REQUEST)
-    .json({ message : "OTP not verified" });
+    } else {
+      return res
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ message: "OTP not verified" });
     }
   }
 };
