@@ -38,7 +38,6 @@ interface ISignupReq {
 
 export const sendToken = async (reqBody: ISignupReq) => {
   const { phoneNumber } = reqBody;
-  const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
   var secret = speakeasy.generateSecret({ length: 20 }).base32;
   var token = speakeasy.totp({
@@ -50,10 +49,10 @@ export const sendToken = async (reqBody: ISignupReq) => {
   const TOTPToken = await generateOTToken({ secret });
 
   // Find if the document with the phoneNumber exists in the database
-  let totp = await TOTP.findOneAndUpdate({ phone }, { token: TOTPToken });
+  let totp = await TOTP.findOneAndUpdate({ phoneNumber }, { token: TOTPToken });
   if (isEmpty(totp)) {
     await new TOTP({
-      phoneNumber: phone,
+      phoneNumber: phoneNumber,
       token: TOTPToken,
     }).save();
   }
@@ -69,9 +68,8 @@ export const verifyToken = async (
   tokens: string,
   res: Response
 ) => {
-  const phone = phoneNumber?.replace(/[^0-9]/g, "");
 
-  let totp = await TOTP.findOneAndDelete({ phoneNumber: phone }).lean();
+  let totp = await TOTP.findOneAndDelete({ phoneNumber: phoneNumber }).lean();
   if (!totp) {
     return res
       .status(HttpStatusCodes.BAD_REQUEST)
@@ -107,7 +105,7 @@ export const verifyToken = async (
           customerName: "TEMP_USER",
           totalVisits: 1,
           lastVisit: new Date(),
-          phoneNumber: phone,
+          phoneNumber: phoneNumber,
         };
         const _member = new Member(_newMember);
         await _member.save();

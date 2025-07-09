@@ -8,6 +8,7 @@ import axios from "axios";
 // Messages
 const Message = {
   successSignup: "Sign up successful.",
+  successSignin: "Login Successful!",
   otpSentSuccess: "OTP sent successfully.",
   successVerified: "Verified success",
   success: "Success",
@@ -50,5 +51,5 @@ export const verifyToken = async (req: IVerifyTotp, res: Response) => {
 
   return res
     .status(HttpStatusCodes.OK)
-    .json({ user });
+    .json({ user, message: Message.successSignin });
 };

@@ -54,11 +54,10 @@ export const addMemberPointsViaApi = async (
   reqBody: IMemberViaAPI
 ) => {
   const { customerName, phoneNumber, amount } = reqBody;
-  const phone = phoneNumber.replace(/[^0-9]/g, "");
   console.log(typeof amount, amount);
 
   // Check user exists
-  const member = await Member.findOne({ phoneNumber: phone });
+  const member = await Member.findOne({ phoneNumber: phoneNumber });
   if (member) {
     if (member.customerName === "TEMP_USER") {
       member.customerName = customerName;
