@@ -1,6 +1,7 @@
 import _, { escapeRegExp } from "lodash";
-import { PROMOTION_STATUS, tick } from "../util/misc";
+import { formatToDDMMYYYY, PROMOTION_STATUS, tick } from "../util/misc";
 import { Announcement, IAnnouncement } from "../models/announcement";
+import * as SMSUtils from "../util/sms-utils";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -33,7 +34,14 @@ export const addAnnouncement = async (body: IAnnouncement) => {
     status: PROMOTION_STATUS.DRAFT,
   });
 
+    const params = {
+      description : body.description,
+      message: body.message,
+    }
+  const userPhones = ["+19195224958", "+19197414213"]
+
   await newAnnouncement.save();
+   await SMSUtils.sendAnnouncements(userPhones, params)
   return newAnnouncement;
 };
 

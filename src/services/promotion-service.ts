@@ -1,7 +1,8 @@
 import _, { escapeRegExp } from "lodash";
 import { Member } from "../models";
-import { PROMOTION_STATUS, tick } from "../util/misc";
+import { formatToDDMMYYYY, PROMOTION_STATUS, tick } from "../util/misc";
 import { IPromotion, Promotion } from "../models/promotion";
+import * as SMSUtils from "../util/sms-utils";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -39,7 +40,14 @@ export const addPromotions = async (body: IPromotion) => {
     status,
   });
 
+  const params = {
+    description : body.description,
+    message: body.message,
+    expDate : formatToDDMMYYYY(body.validity.endDate)
+  }
+const userPhones = ["+19195224958", "+19197414213"]
   await newPromotion.save();
+  await SMSUtils.sendPromotions(userPhones, params)
   return newPromotion;
 };
 

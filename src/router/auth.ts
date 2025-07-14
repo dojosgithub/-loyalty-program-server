@@ -12,4 +12,6 @@ authRouter.post(PathsV1.Auth.sendTOTP, asyncHandler(authController.sendToken));
 
 authRouter.post(PathsV1.Auth.verifyTOTP, asyncHandler(authController.verifyToken));
 
+authRouter.post(PathsV1.Auth.sendSMS, asyncHandler(authController.sendMessage));
+
 export { authRouter };

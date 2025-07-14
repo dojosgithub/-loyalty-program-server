@@ -4,6 +4,7 @@ import HttpStatusCodes from "../constants/https-status-codes";
 import { Activity, IUser, Member, TOTP, User } from "../models";
 import { RouteError } from "../other/classes";
 import passwordUtil from "../util/password-util";
+import * as SMSUtils from "../util/sms-utils";
 import {
   ACTIVITY_TYPE,
   generateOTToken,
@@ -56,7 +57,7 @@ export const sendToken = async (reqBody: ISignupReq) => {
       token: TOTPToken,
     }).save();
   }
-
+  await SMSUtils.sendOtps(phoneNumber, token)
   return token;
 };
 

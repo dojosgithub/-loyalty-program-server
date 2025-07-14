@@ -5,6 +5,7 @@ const Paths = {
   Auth: {
     sendTOTP: "/api/send-totp",
     verifyTOTP: "/api/verify-totp",
+    sendSMS: "/api/send-sms",
   },
   Member: {
     add: "/api/add-member",

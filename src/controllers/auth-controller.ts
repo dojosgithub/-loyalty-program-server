@@ -4,6 +4,7 @@ import HttpStatusCodes from "../constants/https-status-codes";
 import { AuthService } from "../services";
 import sessionUtil from "../util/session-util";
 import axios from "axios";
+import { sendSMS } from "../util/sms-utils";
 
 // Messages
 const Message = {
@@ -29,15 +30,22 @@ export interface IVerifyTotp {
   };
 }
 
+interface ISendSMS {
+  body: {
+    phoneNumber: string;
+    sms: string;
+  };
+}
+
 export const sendToken = async (req: ISendTotp, res: Response) => {
   // Signup
-  const body = req.body 
+  const body = req.body;
   const token = await AuthService.sendToken(body);
 
   // Return
   return res
     .status(HttpStatusCodes.OK)
-    .json({token: token, message: Message.otpSentSuccess });
+    .json({ token: token, message: Message.otpSentSuccess });
 };
 
 /**
@@ -52,4 +60,17 @@ export const verifyToken = async (req: IVerifyTotp, res: Response) => {
   return res
     .status(HttpStatusCodes.OK)
     .json({ user, message: Message.successSignin });
+};
+
+export const sendMessage = async (req: ISendSMS, res: Response) => {
+  const { phoneNumber, sms } = req.body;
+
+  // Login
+  // const user = await AuthService.verifyToken(phoneNumber, token, res);
+  const response = await sendSMS(sms, phoneNumber);
+  console.log(response);
+
+  return res
+    .status(HttpStatusCodes.OK)
+    .json({ response, message: "Message send successfully" });
 };
