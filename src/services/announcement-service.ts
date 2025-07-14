@@ -2,6 +2,7 @@ import _, { escapeRegExp } from "lodash";
 import { formatToDDMMYYYY, PROMOTION_STATUS, tick } from "../util/misc";
 import { Announcement, IAnnouncement } from "../models/announcement";
 import * as SMSUtils from "../util/sms-utils";
+import { Member } from "../models";
 
 export const Errors = {
   Unauth: "Unauthorized",
@@ -34,14 +35,21 @@ export const addAnnouncement = async (body: IAnnouncement) => {
     status: PROMOTION_STATUS.DRAFT,
   });
 
-    const params = {
-      description : body.description,
-      message: body.message,
+  const numbers = await Member.find({}).select("phoneNumber").lean();
+  let userPhones = [] as string[];
+  const num = numbers.map((number) => {
+    if (number.phoneNumber) {
+      userPhones.push(number.phoneNumber);
     }
-  const userPhones = ["+19195224958", "+19197414213"]
+  });
+
+  const params = {
+    description: body.description,
+    message: body.message,
+  };
 
   await newAnnouncement.save();
-   await SMSUtils.sendAnnouncements(userPhones, params)
+  await SMSUtils.sendAnnouncements(userPhones, params);
   return newAnnouncement;
 };
 
@@ -61,4 +69,3 @@ export const getAllAnnouncements = async (params: paginationParams) => {
 
   return _doc;
 };
-

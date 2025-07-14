@@ -40,14 +40,20 @@ export const addPromotions = async (body: IPromotion) => {
     status,
   });
 
+  const numbers = await Member.find({}).select("phoneNumber").lean();
+  let userPhones = [] as string[];
+  const num = numbers.map((number) => {
+    if (number.phoneNumber) {
+      userPhones.push(number.phoneNumber);
+    }
+  });
   const params = {
-    description : body.description,
+    description: body.description,
     message: body.message,
-    expDate : formatToDDMMYYYY(body.validity.endDate)
-  }
-const userPhones = ["+19195224958", "+19197414213"]
+    expDate: formatToDDMMYYYY(body.validity.endDate),
+  };
   await newPromotion.save();
-  await SMSUtils.sendPromotions(userPhones, params)
+  await SMSUtils.sendPromotions(userPhones, params);
   return newPromotion;
 };
 

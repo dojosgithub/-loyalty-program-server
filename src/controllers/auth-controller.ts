@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../models";
+import { Member, User } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
 import { AuthService } from "../services";
 import sessionUtil from "../util/session-util";
@@ -67,9 +67,9 @@ export const sendMessage = async (req: ISendSMS, res: Response) => {
 
   // Login
   // const user = await AuthService.verifyToken(phoneNumber, token, res);
-  const response = await sendSMS(sms, phoneNumber);
-  console.log(response);
-
+  // const response = await sendSMS(sms, phoneNumber);
+  // console.log(response);
+const response = await Member.find({}).select('phoneNumber').lean();
   return res
     .status(HttpStatusCodes.OK)
     .json({ response, message: "Message send successfully" });
