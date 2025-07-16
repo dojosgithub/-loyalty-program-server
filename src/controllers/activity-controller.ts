@@ -57,9 +57,9 @@ export const exportActivity = async (req: Request, res: Response) => {
         : 'N/A',
       'New User': activity.newUser ? 'Yes' : 'No',
       'Activity Type': activity.activityType,
-      'Activity Date': new Date(activity.activityDate).toISOString().split('T')[0],
+      'Activity Date (DD/MM/YYYY)': new Date(activity.activityDate).toISOString().split('T')[0],
       'Activity Points': activity.activityPoints,
-      'Activity CreatedAt':new Date(activity.createdAt).toISOString().split('T')[0],
+      'Activity CreatedAt (DD/MM/YYYY)':new Date(activity.createdAt).toISOString().split('T')[0],
     }));
 
     const parser = new Parser();

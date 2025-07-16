@@ -114,22 +114,34 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
     const members = await Member.find().lean();
 
     if (!members.length) {
-      return res.status(404).json({ message: 'No members to export' });
+      return res.status(404).json({ message: 'No members found' });
     }
 
-    const json2csvParser = new Parser();
-    const csv = json2csvParser.parse(members);
+    const formatted = members.map((member, index) => ({
+      Index: index + 1,
+      'Customer Name': member.customerName,
+      'Phone Number': member.phoneNumber,
+      'Current Points': member.currentPoints,
+      'Lifetime Points': member.lifetimePoints,
+      'Total Visits': member.totalVisits,
+      'Revisit Count': member.revisitCount,
+      'Last Visit (DD/MM/YYYY)': member.lastVisit ? new Date(member.lastVisit).toISOString().split('T')[0] : '',
+      'Created At (DD/MM/YYYY)': new Date(member.createdAt).toISOString().split('T')[0],
+    }));
+
+    const parser = new Parser();
+    const csv = parser.parse(formatted);
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename=Members-${Date.now()}.csv`
+      `attachment; filename=MemberReport-${Date.now()}.csv`
     );
     res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
 
     res.send(csv);
   } catch (error) {
-    console.error('Error exporting CSV:', error);
+    console.error('Error exporting member CSV:', error);
     res.status(500).json({ message: 'Failed to export CSV' });
   }
 };
