@@ -37,6 +37,7 @@ const Paths = {
   },
   Activity: {
     list: "/api/activity",
+    download : "/api/download-activity",
   },
 };
 

@@ -3,6 +3,7 @@ import { Member } from "../models";
 import HttpStatusCodes from "../constants/https-status-codes";
 import { MemberService } from "../services";
 import ExcelJS from "exceljs";
+import { Parser } from 'json2csv';
 
 // Messages
 const Message = {
@@ -112,34 +113,24 @@ export const exportMemberExcel = async (req: Request, res: Response) => {
   try {
     const members = await Member.find().lean();
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Members");
-
-    if (members.length > 0) {
-      worksheet.columns = Object.keys(members[0]).map((key) => ({
-        header: key,
-        key: key,
-      }));
-      worksheet.addRows(members);
+    if (!members.length) {
+      return res.status(404).json({ message: 'No members to export' });
     }
 
+    const json2csvParser = new Parser();
+    const csv = json2csvParser.parse(members);
+
+    res.setHeader('Content-Type', 'text/csv');
     res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=Members-${Date.now()}.xlsx`
+      'Content-Disposition',
+      `attachment; filename=Members-${Date.now()}.csv`
     );
     res.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
 
-    await workbook.xlsx.write(res);
-    res.end();
+    res.send(csv);
   } catch (error) {
-    console.error("Error exporting Excel:", error);
-    return res
-      .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Failed to export Excel" });
+    console.error('Error exporting CSV:', error);
+    res.status(500).json({ message: 'Failed to export CSV' });
   }
 };
 

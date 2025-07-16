@@ -10,5 +10,9 @@ const activityRouter: Router = Router({ mergeParams: true });
 //? @desc = get all activities
 activityRouter.get(PathsV1.Activity.list, asyncHandler(activityController.getAllActivities));
 
+//? @api  = /api/download-members
+//? @desc = download members list
+activityRouter.get(PathsV1.Activity.download, asyncHandler(AuthenticateMW), asyncHandler(activityController.exportActivity));
+
 
 export { activityRouter };
