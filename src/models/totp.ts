@@ -1,5 +1,6 @@
 import { Schema, model, Types, Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 // ----------------------------------------
 
@@ -42,7 +43,7 @@ totpSchema.set("toJSON", {
 });
 
 // Plugins
-totpSchema.plugin(mongoosePaginate);
+totpSchema.plugin(aggregatePaginate);
 
 // Model
 export const TOTP = model<ITOTP, totpSchema>(

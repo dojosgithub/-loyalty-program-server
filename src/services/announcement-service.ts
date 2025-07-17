@@ -63,9 +63,12 @@ export const getAllAnnouncements = async (params: paginationParams) => {
     sort: { createdAt: -1 },
     // select: "-lifetimePoints -totalVisits",
   };
+    const aggregate = Announcement.aggregate([
+    { $sort: { createdAt: -1 } }, // sort directly in the pipeline
+  ]);
 
   // @ts-ignore
-  const _doc = await Announcement.paginate(searchQuery, paginateOptions);
+  const _doc = await Reward.Announcement(aggregate, paginateOptions);
 
   return _doc;
 };

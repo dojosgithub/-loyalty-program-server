@@ -65,11 +65,9 @@ export const deleteReward = async (req: Request, res: Response) => {
 
 
  // Public API
- export const getAllRewardsPublicAPI = async (req: IReqPagination, res: Response) => {
-  const limit = parseInt(req.query.limit) || 10;
-  const page = parseInt(req.query.page) || 1;
+ export const getAllRewardsPublicAPI = async (req: Request, res: Response) => {
 
-  const list = await RewardService.getAllRewardsPublicAPI({ page, limit });
+  const list = await RewardService.getAllRewardsPublicAPI();
 
   return res.status(HttpStatusCodes.OK).json(list);
 };

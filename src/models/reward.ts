@@ -1,5 +1,6 @@
 import { Schema, model, Types, Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 // ----------------------------------------
 
@@ -43,7 +44,7 @@ rewardSchema.set("toJSON", {
 });
 
 // Plugins
-rewardSchema.plugin(mongoosePaginate);
+rewardSchema.plugin(aggregatePaginate);
 
 // Model
 export const Reward = model<IReward, rewardSchema>(

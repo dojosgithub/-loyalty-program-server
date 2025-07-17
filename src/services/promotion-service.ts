@@ -68,8 +68,12 @@ export const getAllPromotions = async (params: paginationParams) => {
     // select: "-lifetimePoints -totalVisits",
   };
 
+    const aggregate = Promotion.aggregate([
+    { $sort: { createdAt: -1 } }, // sort directly in the pipeline
+  ]);
+
   // @ts-ignore
-  const _doc = await Promotion.paginate(searchQuery, paginateOptions);
+  const _doc = await Promotion.aggregatePaginate(aggregate, paginateOptions);
 
   return _doc;
 };

@@ -1,7 +1,6 @@
 import _, { escapeRegExp } from "lodash";
 import { IReward, Reward } from "../models";
 
-
 export const Errors = {
   Unauth: "Unauthorized",
   EmailNotFound(email: string) {
@@ -27,7 +26,6 @@ interface paginationParams {
   limit: number;
 }
 
-
 export const addReward = async (body: IReward) => {
   const newReward = new Reward({
     ...body,
@@ -47,12 +45,33 @@ export const getAllRewards = async (params: paginationParams) => {
     sort: { createdAt: -1 },
     // select: "-lifetimePoints -totalVisits",
   };
+  const aggregate = Reward.aggregate([
+    { $sort: { createdAt: -1 } }, // sort directly in the pipeline
+  ]);
 
   // @ts-ignore
-  const _doc = await Reward.paginate(searchQuery, paginateOptions);
+  const _doc = await Reward.aggregatePaginate(aggregate, paginateOptions);
 
   return _doc;
 };
+// export const getAllRewardsPublicAPI = async (params: paginationParams) => {
+//   const { page, limit } = params;
+
+//   const paginateOptions = {
+//     page,
+//     limit,
+//     sort: { createdAt: -1 }, // will be applied inside $sort stage
+//   };
+
+//   const aggregate = Reward.aggregate([
+//     { $sort: { createdAt: -1 } }, // sort directly in the pipeline
+//   ]);
+
+//   // @ts-ignore
+//   const _doc = await Reward.aggregatePaginate(aggregate, paginateOptions);
+
+//   return _doc;
+// };
 
 export const updateReward = async (
   rewardId: string,
@@ -77,24 +96,13 @@ export const deleteReward = async (rewardId: string) => {
   if (!reward) {
     throw new Error("Reward not found");
   }
-
 };
-
 
 // Public API service
 
-export const getAllRewardsPublicAPI = async (params: paginationParams) => {
-  const { page, limit } = params;
-
-  let searchQuery = {};
-  const paginateOptions = {
-    page,
-    limit,
-    sort: { createdAt: -1 },
-  };
-
+export const getAllRewardsPublicAPI = async () => {
   // @ts-ignore
-  const _doc = await Reward.paginate(searchQuery, paginateOptions);
+  const _doc = await Reward.find().sort({ createdAt: -1 }).lean();
 
   return _doc;
 };

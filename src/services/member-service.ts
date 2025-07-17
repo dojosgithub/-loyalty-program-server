@@ -82,32 +82,36 @@ export const addMemberPointsViaApi = async (
 export const getAllMembers = async (params: paginationParams) => {
   const { page, limit, search } = params;
 
-  let searchQuery = {};
   const paginateOptions = {
     page,
     limit,
-    sort: { createdAt: -1 },
-    // select: "-lifetimePoints -totalVisits",
   };
 
+  const pipeline: any[] = [];
+
+  // Handle search
   if (!_.isEmpty(search) && !_.isUndefined(search)) {
     const documentMatchKeys = ["customerName", "phoneNumber"];
-    const ORqueryArray = documentMatchKeys.map((key) => ({
+    const orQueryArray = documentMatchKeys.map((key) => ({
       [key]: { $regex: new RegExp(escapeRegExp(search), "gi") },
     }));
 
-    searchQuery = {
-      ...searchQuery,
-      $and: [
-        {
-          $or: ORqueryArray,
-        },
-      ],
-    };
+    pipeline.push({
+      $match: {
+        $or: orQueryArray,
+      },
+    });
   }
 
+  // Sort by createdAt (descending)
+  pipeline.push({
+    $sort: { createdAt: -1 },
+  });
+
+  const aggregate = Member.aggregate(pipeline);
+
   // @ts-ignore
-  const _doc = await Member.paginate(searchQuery, paginateOptions);
+  const _doc = await Member.aggregatePaginate(aggregate, paginateOptions);
 
   return _doc;
 };

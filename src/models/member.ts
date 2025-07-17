@@ -1,6 +1,6 @@
 import { Schema, model, Types, Model, Number } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 // ----------------------------------------
 
 export interface IMember {
@@ -68,7 +68,7 @@ memberSchema.set("toJSON", {
 });
 
 // Plugins
-memberSchema.plugin(mongoosePaginate);
+memberSchema.plugin(aggregatePaginate);
 
 // Model
 export const Member = model<IMember, MemberModel>("Member", memberSchema);

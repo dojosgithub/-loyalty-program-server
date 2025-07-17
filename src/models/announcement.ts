@@ -1,5 +1,6 @@
 import { Schema, model, Types, Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 import { USER_ROLE } from "../constants/misc";
 import { IUser } from "./user";
 
@@ -95,7 +96,7 @@ announcementSchema.set("toJSON", {
 });
 
 // Plugins
-announcementSchema.plugin(mongoosePaginate);
+announcementSchema.plugin(aggregatePaginate);
 
 // Model
 export const Announcement = model<IAnnouncement, announcementSchema>(

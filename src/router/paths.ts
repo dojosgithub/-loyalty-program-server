@@ -38,6 +38,9 @@ const Paths = {
   Activity: {
     list: "/api/activity",
     download : "/api/download-activity",
+    points : "/api/activity-points",
+    dashboardChart : "/api/dashboard-activity",
+    recentActivitydashboard : "/api/recent-activity",
   },
 };
 

@@ -1,5 +1,6 @@
 import { Schema, model, Types, Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 import { USER_ROLE } from "../constants/misc";
 import { IUser } from "./user";
 
@@ -118,7 +119,7 @@ promotionSchema.set("toJSON", {
 });
 
 // Plugins
-promotionSchema.plugin(mongoosePaginate);
+promotionSchema.plugin(aggregatePaginate);
 
 // Model
 export const Promotion = model<IPromotion, PromotionModel>(
