@@ -162,6 +162,7 @@ export const redeemMemberPoints = async (
   }
   if (member && member?.currentPoints >= points) {
     member.currentPoints -= points;
+     member.currentPoints = Math.round(member.currentPoints);
     member.totalVisits += 1;
     member.revisitCount = member.totalVisits;
     member.lastVisit = new Date();
